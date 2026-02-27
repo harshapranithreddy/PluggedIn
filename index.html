@@ -4,332 +4,419 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plugged In — Songbook</title>
+  <meta name="theme-color" content="#0b0b0f" />
   <style>
-    :root {
-      --bg: #0b0d12;
-      --card: rgba(255, 255, 255, 0.06);
-      --stroke: rgba(255, 255, 255, 0.12);
-      --text: rgba(255, 255, 255, 0.92);
-      --muted: rgba(255, 255, 255, 0.62);
-      --shadow: 0 20px 60px rgba(0,0,0,0.45);
+    :root{
+      --bg:#07070b;
+      --card:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.62);
+      --red:#ff2d2d;
+      --red2:#ff4d4d;
+      --shadow:0 18px 55px rgba(0,0,0,.55);
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-
-    body {
-      margin: 0;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color: var(--text);
+      color:var(--text);
       background:
-        radial-gradient(1200px 800px at 15% 20%, rgba(139, 92, 246, 0.22), transparent 55%),
-        radial-gradient(900px 700px at 85% 10%, rgba(34, 197, 94, 0.18), transparent 50%),
+        radial-gradient(900px 600px at 15% 10%, rgba(255,45,45,.22), transparent 60%),
+        radial-gradient(900px 700px at 85% 0%, rgba(255,77,77,.12), transparent 60%),
+        radial-gradient(1200px 900px at 50% 120%, rgba(255,45,45,.10), transparent 55%),
         var(--bg);
-      overflow-x: hidden;
+      overflow-x:hidden;
     }
 
-    .bg { position: fixed; inset: 0; pointer-events: none; }
-    .glow {
-      position: absolute;
-      width: 520px; height: 520px;
-      filter: blur(80px);
-      opacity: 0.65;
+    /* Mobile-first layout container */
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 14px 26px;
+    }
+
+    /* Subtle animated gradient glow (very light, mobile friendly) */
+    .bgGlow{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.7;
+      filter: blur(70px);
+    }
+    .g1,.g2{
+      position:absolute;
+      width: 420px;
+      height: 420px;
       border-radius: 999px;
+      background: rgba(255,45,45,.45);
+      animation: floaty 10s ease-in-out infinite;
     }
-    .glow-1 { left: -120px; top: -160px; background: rgba(139, 92, 246, 0.65); }
-    .glow-2 { right: -180px; top: -120px; background: rgba(34, 197, 94, 0.55); }
-
-    .header {
-      max-width: 980px;
-      margin: 28px auto 12px;
-      padding: 0 18px;
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+    .g1{left:-180px; top:-170px}
+    .g2{
+      right:-200px; top:-140px;
+      background: rgba(255,77,77,.35);
+      animation-delay: -3s;
+    }
+    @keyframes floaty{
+      0%,100%{transform: translate3d(0,0,0) scale(1)}
+      50%{transform: translate3d(20px,18px,0) scale(1.05)}
     }
 
-    .brand { display: flex; gap: 12px; align-items: center; }
-    .logo {
-      width: 44px; height: 44px;
-      display: grid; place-items: center;
+    /* Top logos row */
+    .topBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding-top: 6px;
+      padding-bottom: 12px;
+    }
+
+    .logoBtn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width: 44px;
+      height: 44px;
       border-radius: 14px;
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(34, 197, 94, 0.55));
-      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 12px 38px rgba(0,0,0,.35);
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .logoBtn img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+      display:block;
+    }
+
+    .titleBlock{
+      text-align:center;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .titleBlock h1{
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: .2px;
+      line-height: 1.15;
       font-weight: 800;
-      letter-spacing: 0.5px;
     }
-    .brandText h1 { margin: 0; font-size: 22px; letter-spacing: 0.2px; }
-    .brandText p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
-
-    .searchWrap {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      width: min(520px, 100%);
+    .titleBlock p{
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    #searchInput {
-      flex: 1;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      padding: 12px 12px;
-      border-radius: 14px;
-      outline: none;
-      box-shadow: 0 10px 35px rgba(0,0,0,0.25);
-    }
-    #searchInput:focus {
-      border-color: rgba(139, 92, 246, 0.6);
-      box-shadow: 0 12px 45px rgba(139, 92, 246, 0.18);
-    }
-
-    .main {
-      max-width: 980px;
-      margin: 10px auto 48px;
-      padding: 0 18px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .card {
+    /* Card */
+    .card{
       background: var(--card);
       border: 1px solid var(--stroke);
-      border-radius: 20px;
+      border-radius: 18px;
       box-shadow: var(--shadow);
-      padding: 18px;
       backdrop-filter: blur(12px);
+      overflow:hidden;
     }
 
-    .cardTop {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
+    /* Search */
+    .searchArea{
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,45,45,.10), rgba(0,0,0,0));
     }
-    .cardTop h2 { margin: 0; font-size: 18px; }
-    .muted { color: var(--muted); }
 
-    .pill {
-      padding: 8px 10px;
+    .searchWrap{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    #searchInput{
+      flex:1;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      padding: 13px 12px;
+      border-radius: 14px;
+      outline:none;
+      font-size: 15px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.28);
+    }
+    #searchInput:focus{
+      border-color: rgba(255,45,45,.55);
+      box-shadow: 0 14px 45px rgba(255,45,45,.16);
+    }
+
+    .btn{
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btn.ghost{background: transparent}
+    .btn.small{padding: 8px 10px; border-radius: 12px; font-size: 12px}
+
+    .metaRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 14px 12px;
+    }
+    .muted{color:var(--muted)}
+    .pill{
+      padding: 7px 10px;
       border-radius: 999px;
-      border: 1px solid var(--stroke);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
       font-size: 12px;
-      color: rgba(255,255,255,0.75);
-      background: rgba(255,255,255,0.05);
       white-space: nowrap;
     }
-    .pill.subtle { opacity: 0.85; }
 
-    .resultsMeta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 12px;
-      border: 1px dashed rgba(255,255,255,0.18);
+    /* Results info */
+    .resultsMeta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 14px;
+      margin: 0 14px 10px;
+      border: 1px dashed rgba(255,255,255,.18);
       border-radius: 16px;
-      margin-bottom: 12px;
     }
+    .hidden{display:none}
 
-    .songList {
-      list-style: none;
+    /* Song list */
+    .songList{
+      list-style:none;
       margin: 0;
-      padding: 0;
-      display: grid;
+      padding: 0 12px 12px;
+      display:grid;
       gap: 10px;
     }
 
-    .songItem {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .songItem{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
       gap: 12px;
       padding: 12px 12px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.04);
-      cursor: pointer;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      cursor:pointer;
       transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+      -webkit-tap-highlight-color: transparent;
     }
-    .songItem:hover {
+    .songItem:hover{
+      border-color: rgba(255,45,45,.35);
+      background: rgba(255,45,45,.08);
       transform: translateY(-1px);
-      border-color: rgba(139, 92, 246, 0.35);
-      background: rgba(139, 92, 246, 0.07);
     }
-    .songItem:focus { outline: 2px solid rgba(139,92,246,0.35); outline-offset: 2px; }
+    .songItem:active{
+      transform: translateY(0px) scale(.995);
+    }
 
-    .songLeft { display: flex; gap: 12px; align-items: center; min-width: 0; }
-    .songNum {
-      width: 30px; height: 30px;
-      border-radius: 10px;
-      display: grid; place-items: center;
-      border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.78);
+    .songLeft{display:flex; gap:12px; align-items:center; min-width:0}
+    .songNum{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, rgba(255,45,45,.20), rgba(0,0,0,.18));
+      color: rgba(255,255,255,.84);
       font-size: 12px;
       flex: 0 0 auto;
     }
-    .songText { min-width: 0; }
-    .songTitle { font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .songArtist { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    .chev { color: rgba(255,255,255,0.55); font-size: 20px; line-height: 1; }
-
-    .btn {
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    .songText{min-width:0}
+    .songTitle{
+      font-weight: 700;
+      font-size: 15px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
-    .btn:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.26); }
-    .btn:active { transform: translateY(0px); }
-    .btn.ghost { background: transparent; }
-    .btn.small { padding: 8px 10px; border-radius: 12px; font-size: 12px; }
-
-    .noResults {
-      text-align: center;
-      padding: 24px 12px 10px;
+    .songArtist{
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
-    .noResults h3 { margin: 0 0 6px; }
+    .chev{color: rgba(255,255,255,.55); font-size: 22px; line-height: 1}
 
-    .hidden { display: none; }
-
-    .detailTop {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .detailHeader h2 { margin: 6px 0 0; font-size: 22px; }
-    .detailHeader p { margin: 6px 0 0; }
-
-    .detailActions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 14px 0 10px;
-    }
-
-    .lyricsBox {
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 18px;
-      background: rgba(0,0,0,0.20);
-      padding: 14px;
-      overflow: hidden;
-    }
-
-    .lyrics {
-      margin: 0;
-      white-space: pre-wrap;
-      line-height: 1.55;
-      font-size: 14px;
-      color: rgba(255,255,255,0.88);
-    }
-
-    .lyricsFallback { padding: 12px 4px; }
-
-    mark {
-      background: rgba(34, 197, 94, 0.25);
+    mark{
+      background: rgba(255,45,45,.25);
       color: var(--text);
       padding: 0 2px;
       border-radius: 6px;
     }
 
-    .footer {
-      max-width: 980px;
-      margin: 0 auto 30px;
-      padding: 0 18px;
-      text-align: center;
-      font-size: 13px;
+    /* Detail view */
+    .detailTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,45,45,.10), rgba(0,0,0,0));
+    }
+
+    .detailHeader{
+      padding: 12px 14px 0;
+    }
+    .detailHeader h2{
+      margin: 6px 0 0;
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 850;
+    }
+    .detailHeader p{margin: 8px 0 0}
+
+    .detailActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      padding: 12px 14px 8px;
+    }
+
+    .lyricsBox{
+      margin: 0 14px 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      background: rgba(0,0,0,.22);
+      padding: 14px;
+      overflow:hidden;
+    }
+    .lyrics{
+      margin:0;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      font-size: 14px;
+      color: rgba(255,255,255,.88);
+    }
+    .lyricsFallback{
+      padding: 8px 2px;
+    }
+    .lyricsFallback h3{margin:0 0 6px; font-size: 16px}
+    .lyricsFallback p{margin:0}
+
+    .footer{
+      text-align:center;
+      padding: 14px 6px 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Slightly bigger layout for wider screens */
+    @media (min-width: 720px){
+      .wrap{padding: 18px 18px 34px}
+      .titleBlock h1{font-size: 18px}
+      .logoBtn{width: 48px; height: 48px}
+      #searchInput{font-size: 16px}
+      .songTitle{font-size: 16px}
     }
   </style>
 </head>
 
 <body>
-  <div class="bg">
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
+  <div class="bgGlow">
+    <div class="g1"></div>
+    <div class="g2"></div>
   </div>
 
-  <header class="header">
-    <div class="brand">
-      <div class="logo">PI</div>
-      <div class="brandText">
-        <h1>Plugged In</h1>
-        <p>Jamming Session Songbook</p>
+  <div class="wrap">
+    <!-- Top row: Plugged In (left), title centered, XTSY (right) -->
+    <div class="topBar">
+      <div class="logoBtn" title="Plugged In">
+        <img src="main/pilogo.png" alt="Plugged In logo" />
+      </div>
+
+      <div class="titleBlock">
+        <h1>Plugged In Songbook</h1>
+        <p>Tap a song to view details</p>
+      </div>
+
+      <div class="logoBtn" title="XTSY Productions">
+        <img src="main/1xtsylogo.png" alt="XTSY Productions logo" />
       </div>
     </div>
 
-    <div class="searchWrap">
-      <input id="searchInput" type="search" placeholder="Search songs…" autocomplete="off" />
-      <button id="clearBtn" class="btn ghost" type="button" aria-label="Clear search">Clear</button>
-    </div>
-  </header>
-
-  <main class="main">
-    <!-- LIST VIEW -->
-    <section id="listView" class="card">
-      <div class="cardTop">
-        <div>
-          <h2>Setlist</h2>
-          <p class="muted" id="countText">Loading songs…</p>
+    <main class="card">
+      <!-- Search -->
+      <div class="searchArea">
+        <div class="searchWrap">
+          <input id="searchInput" type="search" placeholder="Search from the setlist…" autocomplete="off" />
+          <button id="clearBtn" class="btn ghost" type="button" aria-label="Clear search">Clear</button>
         </div>
-        <div class="pill" id="modePill">Search enabled</div>
       </div>
 
-      <div id="resultsMeta" class="resultsMeta hidden">
-        <span id="resultsText"></span>
-        <button id="showAllBtn" class="btn small" type="button">Show all</button>
-      </div>
-
-      <ul id="songList" class="songList"></ul>
-
-      <div id="noResults" class="noResults hidden">
-        <h3>No matches</h3>
-        <p class="muted">Try a different spelling or click Show all.</p>
-        <button id="showAllBtn2" class="btn" type="button">Show all songs</button>
-      </div>
-    </section>
-
-    <!-- DETAIL VIEW -->
-    <section id="detailView" class="card hidden">
-      <div class="detailTop">
-        <button id="backBtn" class="btn ghost" type="button">← Back to list</button>
-        <div class="pill subtle" id="songNumberPill"></div>
-      </div>
-
-      <div class="detailHeader">
-        <h2 id="songTitle">Song Title</h2>
-        <p class="muted" id="songArtist">Artist</p>
-      </div>
-
-      <div class="detailActions" id="detailActions"></div>
-
-      <article class="lyricsBox">
-        <pre id="lyricsText" class="lyrics"></pre>
-
-        <div id="lyricsFallback" class="lyricsFallback hidden">
-          <h3>Lyrics link</h3>
-          <p class="muted">Full lyrics may be hosted externally. Use the button above to open them.</p>
+      <!-- List view -->
+      <section id="listView">
+        <div class="metaRow">
+          <div>
+            <div style="font-weight:800; font-size:14px;">Setlist</div>
+            <div class="muted" id="countText" style="font-size:12px; margin-top:4px;">Loading songs…</div>
+          </div>
+          <div class="pill" id="modePill">Search enabled</div>
         </div>
-      </article>
-    </section>
-  </main>
 
-  <footer class="footer">
-    <p class="muted">Made for Plugged In • Tap a song to view details</p>
-  </footer>
+        <div id="resultsMeta" class="resultsMeta hidden">
+          <span id="resultsText" class="muted" style="font-size:12px;"></span>
+          <button id="showAllBtn" class="btn small" type="button">Show all</button>
+        </div>
+
+        <ul id="songList" class="songList"></ul>
+
+        <div id="noResults" class="hidden" style="padding: 18px 14px 20px; text-align:center;">
+          <div style="font-weight:900; font-size:16px; margin-bottom:6px;">No matches</div>
+          <div class="muted" style="font-size:12px; margin-bottom:12px;">Try a different spelling or tap Show all.</div>
+          <button id="showAllBtn2" class="btn" type="button">Show all songs</button>
+        </div>
+      </section>
+
+      <!-- Detail view -->
+      <section id="detailView" class="hidden">
+        <div class="detailTop">
+          <button id="backBtn" class="btn ghost" type="button">← Back</button>
+          <div class="pill subtle" id="songNumberPill"></div>
+        </div>
+
+        <div class="detailHeader">
+          <h2 id="songTitle">Song Title</h2>
+          <p class="muted" id="songArtist">Artist</p>
+        </div>
+
+        <div class="detailActions" id="detailActions"></div>
+
+        <article class="lyricsBox">
+          <pre id="lyricsText" class="lyrics"></pre>
+
+          <div id="lyricsFallback" class="lyricsFallback hidden">
+            <h3>Lyrics link</h3>
+            <p class="muted">Full lyrics may be hosted externally. Use the button above to open them.</p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <div class="footer">Made for Plugged In • Optimised for mobile</div>
+  </div>
 
   <script>
-    // Data model supports either inline lyrics OR an external lyrics URL.
-    // Later you'll replace SONGS with your actual 50-song list.
+    // Replace this with your final 50 songs later.
+    // You can either paste lyrics in "lyrics" (only if you have rights),
+    // or use "lyricsUrl" (safe default).
 
     const SONGS = [
       { id: 1, title: "Wonderwall", artist: "Oasis", lyrics: "", lyricsUrl: "https://genius.com/Oasis-wonderwall-lyrics" },
@@ -399,7 +486,7 @@
 
       if (query) {
         resultsMeta.classList.remove("hidden");
-        resultsText.textContent = `Results for "${query}"`;
+        resultsText.textContent = `Results for ${query}`;
       } else {
         resultsMeta.classList.add("hidden");
         resultsText.textContent = "";
@@ -423,7 +510,7 @@
             <div class="songNum">${s.id}</div>
             <div class="songText">
               <div class="songTitle">${highlight(s.title, query)}</div>
-              <div class="songArtist">${highlight(s.artist, query)}</div>
+              <div class="songArtist">${highlight(s.artist || "", query)}</div>
             </div>
           </div>
           <div class="chev">›</div>
@@ -461,22 +548,25 @@
         detailActions.appendChild(a);
       }
 
-      // Show lyrics if provided, otherwise show fallback message
       if (hasInlineLyrics) {
         lyricsText.textContent = song.lyrics;
         lyricsText.classList.remove("hidden");
         lyricsFallback.classList.add("hidden");
       } else {
         lyricsText.textContent = "";
-        lyricsFallback.classList.remove("hidden");
+        lyricsFallback.classList.toggle("hidden", hasUrl); // show fallback only if URL exists
+        // If neither lyrics nor URL exist, show a simple message
+        if (!hasUrl) {
+          lyricsFallback.classList.remove("hidden");
+          lyricsFallback.innerHTML = `
+            <h3>Lyrics not added yet</h3>
+            <p class="muted">We will update this soon.</p>
+          `;
+        }
       }
 
-      // Move to detail view
       listView.classList.add("hidden");
       detailView.classList.remove("hidden");
-
-      // Keep the search term in place (nice UX), but optional:
-      // searchInput.blur();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -491,7 +581,7 @@
       if (!query) return { query: "", results: SONGS };
 
       const results = SONGS.filter((s) => {
-        const hay = normalize(`${s.title} ${s.artist}`);
+        const hay = normalize(`${s.title} ${s.artist || ""}`);
         return hay.includes(query);
       });
 
@@ -500,7 +590,7 @@
 
     function clearSearch() {
       searchInput.value = "";
-      renderList(SONGS);
+      renderList(SONGS, "");
       searchInput.focus();
     }
 
@@ -516,7 +606,7 @@
 
     backBtn.addEventListener("click", goBackToList);
 
-    // Keyboard: Escape clears search when on list view, or goes back from detail view.
+    // Keyboard: Escape clears search on list view, or goes back from detail view.
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
 
@@ -529,7 +619,7 @@
     });
 
     // Initial render
-    renderList(SONGS);
+    renderList(SONGS, "");
   </script>
 </body>
 </html>
