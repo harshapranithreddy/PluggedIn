@@ -34,23 +34,21 @@
        If html is black, you’ll always see black “divisions”.
     */
     html{
-      background: linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
+      background: var(--baseMid);
       background-color: var(--baseMid);
       color-scheme: dark;
     }
-
+    
     body{
       min-height: 100svh;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
-
-      /* Same as html so there’s never a mismatch */
-      background: linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
+    
+      /* solid base so the iOS status bar area matches */
+      background: var(--baseMid);
       background-color: var(--baseMid);
-
+    
       overflow-x: hidden;
-
-      /* Helps reduce weird “bounce” edges on some iOS versions */
       overscroll-behavior-y: none;
     }
 
@@ -58,13 +56,14 @@
     body::before{
       content:"";
       position: fixed;
-      inset: -40px;             /* extend beyond edges to avoid any seams */
+      inset: 0;
       z-index: -2;
       background:
-        radial-gradient(900px 620px at 15% 10%, rgba(255,45,45,.24), transparent 62%),
-        radial-gradient(900px 740px at 85% 0%, rgba(255,77,77,.13), transparent 62%),
-        radial-gradient(1200px 900px at 50% 120%, rgba(255,45,45,.11), transparent 58%),
-        linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
+        radial-gradient(820px 560px at 18% 12%, rgba(255,45,45,.16), transparent 62%),
+        radial-gradient(820px 640px at 86% 10%, rgba(255,77,77,.10), transparent 65%),
+        linear-gradient(180deg, var(--baseMid) 0%, var(--baseMid) 35%, var(--baseBot) 100%);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
 
     /* Soft animated glow layer */
