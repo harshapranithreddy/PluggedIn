@@ -2,98 +2,110 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Plugged In — Songbook</title>
   <meta name="theme-color" content="#07070b" />
   <style>
     :root{
       --bg:#07070b;
-      --card:rgba(255,255,255,.06);
-      --stroke:rgba(255,255,255,.12);
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
+
+      /* red/black accents */
       --red:#ff2d2d;
       --red2:#ff4d4d;
+
+      --card:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.12);
       --shadow:0 18px 55px rgba(0,0,0,.55);
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    *{ box-sizing:border-box; }
+    html, body { height:100%; margin:0; }
+
+    /* Make background always cover full screen (top + bottom) on mobile */
     body{
-      margin:0;
+      min-height: 100svh; /* modern mobile viewport */
+      color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color:var(--text);
-      background:
-        radial-gradient(900px 600px at 15% 10%, rgba(255,45,45,.22), transparent 60%),
-        radial-gradient(900px 700px at 85% 0%, rgba(255,77,77,.12), transparent 60%),
-        radial-gradient(1200px 900px at 50% 120%, rgba(255,45,45,.10), transparent 55%),
-        var(--bg);
+      background: var(--bg);
       overflow-x:hidden;
     }
 
+    /* Full-screen background layer (fixed, so it never "cuts off") */
+    .bgLayer{
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(900px 620px at 15% 10%, rgba(255,45,45,.24), transparent 62%),
+        radial-gradient(900px 740px at 85% 0%, rgba(255,77,77,.13), transparent 62%),
+        radial-gradient(1200px 900px at 50% 120%, rgba(255,45,45,.11), transparent 58%),
+        linear-gradient(180deg, #07070b 0%, #05050a 100%);
+    }
+
+    /* Subtle animated glow on top of bg */
     .bgGlow{
-      position:fixed;
-      inset:0;
+      position: fixed;
+      inset: 0;
+      z-index: -1;
       pointer-events:none;
-      opacity:.7;
-      filter: blur(70px);
+      opacity: .78;
+      filter: blur(72px);
     }
     .g1,.g2{
       position:absolute;
-      width: 420px;
-      height: 420px;
+      width: 460px;
+      height: 460px;
       border-radius: 999px;
       background: rgba(255,45,45,.45);
       animation: floaty 10s ease-in-out infinite;
     }
-    .g1{left:-180px; top:-170px}
+    .g1{ left:-200px; top:-190px; }
     .g2{
-      right:-200px; top:-140px;
-      background: rgba(255,77,77,.35);
+      right:-220px; top:-170px;
+      background: rgba(255,77,77,.32);
       animation-delay: -3s;
     }
     @keyframes floaty{
-      0%,100%{transform: translate3d(0,0,0) scale(1)}
-      50%{transform: translate3d(20px,18px,0) scale(1.05)}
+      0%,100%{ transform: translate3d(0,0,0) scale(1); }
+      50%{ transform: translate3d(22px,18px,0) scale(1.06); }
     }
 
+    /* Page container */
     .wrap{
       max-width: 980px;
       margin: 0 auto;
-      padding: 14px 14px 26px;
+      padding: 14px 14px calc(26px + env(safe-area-inset-bottom));
+      padding-top: calc(14px + env(safe-area-inset-top));
     }
 
-    /* TOP BAR */
+    /* Center logo at top */
     .topBar{
       display:flex;
+      flex-direction: column;
       align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding: 8px 2px 12px;
-    }
-
-    /* Logos: NO box. Just the image. */
-    .logoImg{
-      height: 34px;
-      width: auto;
-      max-width: 42vw;
-      display:block;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.55));
-    }
-
-    .titleBlock{
+      justify-content:center;
+      gap: 10px;
+      padding: 6px 0 12px;
       text-align:center;
-      flex: 1 1 auto;
-      min-width: 0;
-      padding: 0 8px;
     }
+
+    .topLogo{
+      height: 56px;            /* bigger than before */
+      width: auto;
+      max-width: min(78vw, 320px);
+      object-fit: contain;
+      display:block;
+      filter: drop-shadow(0 12px 26px rgba(0,0,0,.55));
+    }
+
     .titleBlock h1{
       margin: 0;
       font-size: 16px;
-      letter-spacing: .2px;
       line-height: 1.15;
       font-weight: 900;
+      letter-spacing: .2px;
     }
     .titleBlock p{
       margin: 6px 0 0;
@@ -101,7 +113,7 @@
       color: var(--muted);
     }
 
-    /* CARD */
+    /* Card */
     .card{
       background: var(--card);
       border: 1px solid var(--stroke);
@@ -111,7 +123,7 @@
       overflow:hidden;
     }
 
-    /* SEARCH */
+    /* Search */
     .searchArea{
       padding: 14px 14px 10px;
       border-bottom: 1px solid rgba(255,255,255,.10);
@@ -127,7 +139,7 @@
     #searchInput{
       flex:1;
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.22);
+      background: rgba(0,0,0,.24);
       color: var(--text);
       padding: 13px 12px;
       border-radius: 14px;
@@ -136,7 +148,7 @@
       box-shadow: 0 10px 35px rgba(0,0,0,.28);
     }
     #searchInput:focus{
-      border-color: rgba(255,45,45,.55);
+      border-color: rgba(255,45,45,.60);
       box-shadow: 0 14px 45px rgba(255,45,45,.16);
     }
 
@@ -152,9 +164,9 @@
       flex: 0 0 auto;
       -webkit-tap-highlight-color: transparent;
     }
-    .btn:active{transform: translateY(1px)}
-    .btn.ghost{background: transparent}
-    .btn.small{padding: 8px 10px; border-radius: 12px; font-size: 12px}
+    .btn:active{ transform: translateY(1px); }
+    .btn.ghost{ background: transparent; }
+    .btn.small{ padding: 8px 10px; border-radius: 12px; font-size: 12px; }
 
     .metaRow{
       display:flex;
@@ -163,7 +175,7 @@
       gap:10px;
       padding: 10px 14px 12px;
     }
-    .muted{color:var(--muted)}
+    .muted{ color: var(--muted); }
     .pill{
       padding: 7px 10px;
       border-radius: 999px;
@@ -183,9 +195,9 @@
       border: 1px dashed rgba(255,255,255,.18);
       border-radius: 16px;
     }
-    .hidden{display:none}
+    .hidden{ display:none; }
 
-    /* SONG LIST */
+    /* Song list */
     .songList{
       list-style:none;
       margin: 0;
@@ -209,27 +221,25 @@
     }
     .songItem:hover{
       border-color: rgba(255,45,45,.35);
-      background: rgba(255,45,45,.08);
+      background: rgba(255,45,45,.09);
       transform: translateY(-1px);
     }
-    .songItem:active{
-      transform: translateY(0px) scale(.995);
-    }
+    .songItem:active{ transform: translateY(0px) scale(.995); }
 
-    .songLeft{display:flex; gap:12px; align-items:center; min-width:0}
+    .songLeft{ display:flex; gap:12px; align-items:center; min-width:0; }
     .songNum{
       width: 34px; height: 34px;
       border-radius: 12px;
       display:grid; place-items:center;
       border: 1px solid rgba(255,255,255,.12);
-      background: linear-gradient(135deg, rgba(255,45,45,.20), rgba(0,0,0,.18));
+      background: linear-gradient(135deg, rgba(255,45,45,.22), rgba(0,0,0,.18));
       color: rgba(255,255,255,.84);
       font-size: 12px;
       flex: 0 0 auto;
     }
-    .songText{min-width:0}
+    .songText{ min-width:0; }
     .songTitle{
-      font-weight: 800;
+      font-weight: 900;
       font-size: 15px;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
@@ -239,16 +249,16 @@
       color: var(--muted);
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
-    .chev{color: rgba(255,255,255,.55); font-size: 22px; line-height: 1}
+    .chev{ color: rgba(255,255,255,.55); font-size: 22px; line-height: 1; }
 
     mark{
-      background: rgba(255,45,45,.25);
+      background: rgba(255,45,45,.26);
       color: var(--text);
       padding: 0 2px;
       border-radius: 6px;
     }
 
-    /* DETAIL VIEW */
+    /* Detail view */
     .detailTop{
       display:flex;
       align-items:center;
@@ -259,16 +269,14 @@
       background: linear-gradient(180deg, rgba(255,45,45,.10), rgba(0,0,0,0));
     }
 
-    .detailHeader{
-      padding: 12px 14px 0;
-    }
+    .detailHeader{ padding: 12px 14px 0; }
     .detailHeader h2{
       margin: 6px 0 0;
       font-size: 20px;
       line-height: 1.2;
       font-weight: 900;
     }
-    .detailHeader p{margin: 8px 0 0}
+    .detailHeader p{ margin: 8px 0 0; }
 
     .detailActions{
       display:flex;
@@ -292,20 +300,9 @@
       font-size: 14px;
       color: rgba(255,255,255,.88);
     }
-    .lyricsFallback{
-      padding: 8px 2px;
-    }
-    .lyricsFallback h3{margin:0 0 6px; font-size: 16px}
-    .lyricsFallback p{margin:0}
-
-    /* Small helper note under logos if image fails (only shows when needed) */
-    .logoFallbackNote{
-      display:none;
-      text-align:center;
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .lyricsFallback{ padding: 8px 2px; }
+    .lyricsFallback h3{ margin:0 0 6px; font-size: 16px; }
+    .lyricsFallback p{ margin:0; }
 
     .footer{
       text-align:center;
@@ -314,38 +311,33 @@
       color: var(--muted);
     }
 
+    /* Wider screens */
     @media (min-width: 720px){
-      .wrap{padding: 18px 18px 34px}
-      .titleBlock h1{font-size: 18px}
-      .logoImg{height: 40px}
-      #searchInput{font-size: 16px}
-      .songTitle{font-size: 16px}
+      .wrap{ padding: 18px 18px calc(34px + env(safe-area-inset-bottom)); padding-top: calc(18px + env(safe-area-inset-top)); }
+      .topLogo{ height: 70px; max-width: 360px; }
+      .titleBlock h1{ font-size: 18px; }
+      #searchInput{ font-size: 16px; }
+      .songTitle{ font-size: 16px; }
     }
   </style>
 </head>
 
 <body>
+  <div class="bgLayer"></div>
   <div class="bgGlow">
     <div class="g1"></div>
     <div class="g2"></div>
   </div>
 
   <div class="wrap">
-    <!-- IMPORTANT:
-         For the logos to load, your folder must look like:
-         index.html
-         /main/pilogo.png
-         /main/1xtsylogo.png
-    -->
+    <!-- Center logo only -->
     <div class="topBar">
-      <img id="piLogo" class="logoImg" src="./main/pilogo.png" alt="Plugged In logo" />
+      <img class="topLogo" src="./main/ba.png" alt="Logo" />
       <div class="titleBlock">
         <h1>Plugged In Songbook</h1>
         <p>Search the setlist. Tap a song for lyrics.</p>
       </div>
-      <img id="xtsyLogo" class="logoImg" src="./main/1xtsylogo.png" alt="XTSY Productions logo" />
     </div>
-
 
     <main class="card">
       <!-- Search -->
@@ -363,7 +355,7 @@
             <div style="font-weight:900; font-size:14px;">Setlist</div>
             <div class="muted" id="countText" style="font-size:12px; margin-top:4px;">Loading songs…</div>
           </div>
-          <div class="pill" id="modePill">Search enabled</div>
+          <div class="pill">Search enabled</div>
         </div>
 
         <div id="resultsMeta" class="resultsMeta hidden">
@@ -405,7 +397,7 @@
       </section>
     </main>
 
-    <div class="footer">Made for Plugged In • Optimised for mobile</div>
+    <div class="footer">Optimised for mobile</div>
   </div>
 
   <script>
@@ -445,21 +437,6 @@
     const lyricsText = el("lyricsText");
     const lyricsFallback = el("lyricsFallback");
     const detailActions = el("detailActions");
-
-    // Logo fail detection (helps you debug quickly)
-    const piLogo = el("piLogo");
-    const xtsyLogo = el("xtsyLogo");
-    const logoFallbackNote = el("logoFallbackNote");
-
-    function showLogoNoteIfBroken() {
-      const broken = (img) => !img.complete || img.naturalWidth === 0;
-      if (broken(piLogo) || broken(xtsyLogo)) {
-        logoFallbackNote.style.display = "block";
-      }
-    }
-    piLogo.addEventListener("error", showLogoNoteIfBroken);
-    xtsyLogo.addEventListener("error", showLogoNoteIfBroken);
-    window.addEventListener("load", () => setTimeout(showLogoNoteIfBroken, 150));
 
     function normalize(str) {
       return (str || "")
@@ -560,7 +537,6 @@
 
       if (hasInlineLyrics) {
         lyricsText.textContent = song.lyrics;
-        lyricsText.classList.remove("hidden");
         lyricsFallback.classList.add("hidden");
       } else {
         lyricsText.textContent = "";
@@ -633,7 +609,7 @@
     });
 
     // Initial render
-    renderList(SONS = SONGS, "");
+    renderList(SONGS, "");
   </script>
 </body>
 </html>
