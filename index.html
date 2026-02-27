@@ -307,45 +307,62 @@
       bottom: calc(14px + env(safe-area-inset-bottom));
       z-index: 999;
     
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       border-radius: 999px;
     
       display: grid;
       place-items: center;
     
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.22);
-      color: rgba(255,255,255,.82);
+      background: rgba(0,0,0,.28);
+      color: rgba(255,255,255,.85);
     
       box-shadow: 0 14px 40px rgba(0,0,0,.45);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    
-      opacity: 0;
-      transform: translateY(8px);
-      pointer-events: none;
-      transition: opacity 160ms ease, transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    
       -webkit-tap-highlight-color: transparent;
+    
+      /* smooth show/hide */
+      opacity: 0;
+      transform: translate3d(0,10px,0) scale(.96);
+      visibility: hidden;
+      pointer-events: none;
+    
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease,
+        visibility 0s linear 220ms; /* delay visibility flip until fade out ends */
+    
+      will-change: opacity, transform;
     }
     
+    .toTop.show{
+      opacity: .92;
+      transform: translate3d(0,0,0) scale(1);
+      visibility: visible;
+      pointer-events: auto;
+    
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease,
+        visibility 0s; /* show immediately */
+    }
+    
+    /* icon */
     .toTopIcon{
       width: 22px;
       height: 22px;
-      display: block;
+      display:block;
     }
-    
     .toTop.show{
       opacity: .9;
       transform: translateY(0);
       pointer-events: auto;
     }
-    
+
     .toTop:active{
       transform: translateY(1px) scale(.98);
     }
-    
+
     @media (hover:hover){
       .toTop:hover{
         border-color: rgba(255,60,60,.28);
@@ -440,16 +457,16 @@
   </div>
 
   <!-- ✅ Button MUST be HTML (not inside <script>) -->
-    <button id="toTopBtn" class="toTop" type="button" aria-label="Scroll to top" title="Back to top">
-      <svg class="toTopIcon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-        <path d="M20 38 L32 26 L44 38"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="7"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-      </svg>
-    </button>
+  <button id="toTopBtn" class="toTop" type="button" aria-label="Scroll to top" title="Back to top">
+    <svg class="toTopIcon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      <path d="M20 38 L32 26 L44 38"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="7"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </svg>
+  </button>
 
   <script>
     const SONGS = [
@@ -531,6 +548,9 @@
 
     const toTopBtn = el("toTopBtn");
 
+    // ✅ NEW: remember where the list was scrolled to
+    let listScrollY = 0;
+
     function normalize(str) {
       return (str || "")
         .toLowerCase()
@@ -607,6 +627,9 @@
       const song = SONGS.find((s) => s.id === id);
       if (!song) return;
 
+      // ✅ NEW: save current scroll position BEFORE switching views
+      listScrollY = getScrollTop();
+
       songNumberPill.textContent = `Song #${song.id}`;
       songTitle.textContent = song.title;
       songArtist.textContent = song.artist || "";
@@ -629,15 +652,23 @@
 
       listView.classList.add("hidden");
       detailView.classList.remove("hidden");
+
+      // Optional: keep this to show lyrics from top
       window.scrollTo({ top: 0, behavior: "smooth" });
+
       updateToTopBtn();
     }
 
     function goBackToList() {
       detailView.classList.add("hidden");
       listView.classList.remove("hidden");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      updateToTopBtn();
+
+      // ✅ NEW: restore scroll position (so you go back to song 23 area)
+      // Use rAF so the browser paints the list view first, then scrolls.
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: listScrollY, behavior: "auto" });
+        updateToTopBtn();
+      });
     }
 
     function filterSongs(queryRaw) {
