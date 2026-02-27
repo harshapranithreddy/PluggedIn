@@ -314,6 +314,54 @@
     .lyricsFallback h3{ margin:0 0 6px; font-size: 16px; }
     .lyricsFallback p{ margin:0; }
 
+    .toTop{
+      position: fixed;
+      right: calc(14px + env(safe-area-inset-right));
+      bottom: calc(14px + env(safe-area-inset-bottom));
+      z-index: 999;
+    
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+    
+      display: grid;
+      place-items: center;
+    
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.28);
+      color: rgba(255,255,255,.85);
+    
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+    
+      box-shadow: 0 14px 40px rgba(0,0,0,.45);
+      backdrop-filter: blur(10px);
+    
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .toTop.show{
+      opacity: .9;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    
+    .toTop:active{
+      transform: translateY(1px) scale(.98);
+    }
+    
+    @media (hover:hover){
+      .toTop:hover{
+        border-color: rgba(255,45,45,.35);
+        background: rgba(255,45,45,.10);
+      }
+    }
+
     .footer{
       text-align:center;
       padding: 14px 6px 0;
@@ -401,6 +449,10 @@
   </div>
 
   <script>
+        <button id="toTopBtn" class="toTop" type="button" aria-label="Scroll to top" title="Back to top">
+        ↑
+      </button>
+    
     const SONGS = [
       { id: 1, title: "O Sakkanoda", artist: "Dhee", lyrics: "" },
       { id: 2, title: "Rangamma Mangamma", artist: "M. M. Manasi", lyrics: "" },
@@ -622,7 +674,51 @@
       else clearSearch();
     });
 
+    const toTopBtn = el("toTopBtn");
+
+    function getScrollTarget(){
+      // If you switched to "wrap is the scroller" (overflow-y:auto), use that.
+      // Otherwise fallback to window.
+      const wrap = document.querySelector(".wrap");
+      const wrapIsScrollable = wrap && getComputedStyle(wrap).overflowY !== "visible" && getComputedStyle(wrap).overflowY !== "hidden";
+      return wrapIsScrollable ? wrap : window;
+    }
+    
+    const scrollTarget = getScrollTarget();
+    
+    function getScrollTop(){
+      if (scrollTarget === window) return window.scrollY || document.documentElement.scrollTop || 0;
+      return scrollTarget.scrollTop || 0;
+    }
+    
+    function scrollToTop(){
+      if (scrollTarget === window) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        scrollTarget.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+    
+    function updateToTopBtn(){
+      const y = getScrollTop();
+      if (y > 220) toTopBtn.classList.add("show");
+      else toTopBtn.classList.remove("show");
+    }
+    
+    toTopBtn.addEventListener("click", scrollToTop);
+    
+    // Listen to the right scroll source
+    if (scrollTarget === window) {
+      window.addEventListener("scroll", updateToTopBtn, { passive: true });
+    } else {
+      scrollTarget.addEventListener("scroll", updateToTopBtn, { passive: true });
+    }
+    
+    // Initial state
+    updateToTopBtn();
+    
     renderList(SONGS, "");
+    
   </script>
 </body>
 </html>
