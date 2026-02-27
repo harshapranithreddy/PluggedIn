@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plugged In — Songbook</title>
-  <meta name="theme-color" content="#0b0b0f" />
+  <meta name="theme-color" content="#07070b" />
   <style>
     :root{
       --bg:#07070b;
@@ -31,14 +31,6 @@
       overflow-x:hidden;
     }
 
-    /* Mobile-first layout container */
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 14px 14px 26px;
-    }
-
-    /* Subtle animated gradient glow (very light, mobile friendly) */
     .bgGlow{
       position:fixed;
       inset:0;
@@ -65,48 +57,43 @@
       50%{transform: translate3d(20px,18px,0) scale(1.05)}
     }
 
-    /* Top logos row */
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px 14px 26px;
+    }
+
+    /* TOP BAR */
     .topBar{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      padding-top: 6px;
-      padding-bottom: 12px;
+      padding: 8px 2px 12px;
     }
 
-    .logoBtn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 12px 38px rgba(0,0,0,.35);
-      overflow:hidden;
-      flex: 0 0 auto;
-    }
-    .logoBtn img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 8px;
+    /* Logos: NO box. Just the image. */
+    .logoImg{
+      height: 34px;
+      width: auto;
+      max-width: 42vw;
       display:block;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.55));
     }
 
     .titleBlock{
       text-align:center;
       flex: 1 1 auto;
       min-width: 0;
+      padding: 0 8px;
     }
     .titleBlock h1{
       margin: 0;
       font-size: 16px;
       letter-spacing: .2px;
       line-height: 1.15;
-      font-weight: 800;
+      font-weight: 900;
     }
     .titleBlock p{
       margin: 6px 0 0;
@@ -114,7 +101,7 @@
       color: var(--muted);
     }
 
-    /* Card */
+    /* CARD */
     .card{
       background: var(--card);
       border: 1px solid var(--stroke);
@@ -124,7 +111,7 @@
       overflow:hidden;
     }
 
-    /* Search */
+    /* SEARCH */
     .searchArea{
       padding: 14px 14px 10px;
       border-bottom: 1px solid rgba(255,255,255,.10);
@@ -163,6 +150,7 @@
       transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
       font-size: 13px;
       flex: 0 0 auto;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn:active{transform: translateY(1px)}
     .btn.ghost{background: transparent}
@@ -185,7 +173,6 @@
       white-space: nowrap;
     }
 
-    /* Results info */
     .resultsMeta{
       display:flex;
       align-items:center;
@@ -198,7 +185,7 @@
     }
     .hidden{display:none}
 
-    /* Song list */
+    /* SONG LIST */
     .songList{
       list-style:none;
       margin: 0;
@@ -242,7 +229,7 @@
     }
     .songText{min-width:0}
     .songTitle{
-      font-weight: 700;
+      font-weight: 800;
       font-size: 15px;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
@@ -261,7 +248,7 @@
       border-radius: 6px;
     }
 
-    /* Detail view */
+    /* DETAIL VIEW */
     .detailTop{
       display:flex;
       align-items:center;
@@ -279,7 +266,7 @@
       margin: 6px 0 0;
       font-size: 20px;
       line-height: 1.2;
-      font-weight: 850;
+      font-weight: 900;
     }
     .detailHeader p{margin: 8px 0 0}
 
@@ -311,6 +298,15 @@
     .lyricsFallback h3{margin:0 0 6px; font-size: 16px}
     .lyricsFallback p{margin:0}
 
+    /* Small helper note under logos if image fails (only shows when needed) */
+    .logoFallbackNote{
+      display:none;
+      text-align:center;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .footer{
       text-align:center;
       padding: 14px 6px 0;
@@ -318,11 +314,10 @@
       color: var(--muted);
     }
 
-    /* Slightly bigger layout for wider screens */
     @media (min-width: 720px){
       .wrap{padding: 18px 18px 34px}
       .titleBlock h1{font-size: 18px}
-      .logoBtn{width: 48px; height: 48px}
+      .logoImg{height: 40px}
       #searchInput{font-size: 16px}
       .songTitle{font-size: 16px}
     }
@@ -336,20 +331,23 @@
   </div>
 
   <div class="wrap">
-    <!-- Top row: Plugged In (left), title centered, XTSY (right) -->
+    <!-- IMPORTANT:
+         For the logos to load, your folder must look like:
+         index.html
+         /main/pilogo.png
+         /main/1xtsylogo.png
+    -->
     <div class="topBar">
-      <div class="logoBtn" title="Plugged In">
-        <img src="main/pilogo.png" alt="Plugged In logo" />
-      </div>
-
+      <img id="piLogo" class="logoImg" src="./main/pilogo.png" alt="Plugged In logo" />
       <div class="titleBlock">
         <h1>Plugged In Songbook</h1>
-        <p>Tap a song to view details</p>
+        <p>Search the setlist. Tap a song for lyrics.</p>
       </div>
+      <img id="xtsyLogo" class="logoImg" src="./main/1xtsylogo.png" alt="XTSY Productions logo" />
+    </div>
 
-      <div class="logoBtn" title="XTSY Productions">
-        <img src="main/1xtsylogo.png" alt="XTSY Productions logo" />
-      </div>
+    <div id="logoFallbackNote" class="logoFallbackNote">
+      Logos not loading. Make sure the images exist at <b>./main/pilogo.png</b> and <b>./main/1xtsylogo.png</b>.
     </div>
 
     <main class="card">
@@ -365,7 +363,7 @@
       <section id="listView">
         <div class="metaRow">
           <div>
-            <div style="font-weight:800; font-size:14px;">Setlist</div>
+            <div style="font-weight:900; font-size:14px;">Setlist</div>
             <div class="muted" id="countText" style="font-size:12px; margin-top:4px;">Loading songs…</div>
           </div>
           <div class="pill" id="modePill">Search enabled</div>
@@ -389,7 +387,7 @@
       <section id="detailView" class="hidden">
         <div class="detailTop">
           <button id="backBtn" class="btn ghost" type="button">← Back</button>
-          <div class="pill subtle" id="songNumberPill"></div>
+          <div class="pill" id="songNumberPill"></div>
         </div>
 
         <div class="detailHeader">
@@ -415,8 +413,8 @@
 
   <script>
     // Replace this with your final 50 songs later.
-    // You can either paste lyrics in "lyrics" (only if you have rights),
-    // or use "lyricsUrl" (safe default).
+    // Use "lyrics" ONLY if you have rights to publish them.
+    // Otherwise keep lyrics empty and use lyricsUrl.
 
     const SONGS = [
       { id: 1, title: "Wonderwall", artist: "Oasis", lyrics: "", lyricsUrl: "https://genius.com/Oasis-wonderwall-lyrics" },
@@ -450,6 +448,21 @@
     const lyricsText = el("lyricsText");
     const lyricsFallback = el("lyricsFallback");
     const detailActions = el("detailActions");
+
+    // Logo fail detection (helps you debug quickly)
+    const piLogo = el("piLogo");
+    const xtsyLogo = el("xtsyLogo");
+    const logoFallbackNote = el("logoFallbackNote");
+
+    function showLogoNoteIfBroken() {
+      const broken = (img) => !img.complete || img.naturalWidth === 0;
+      if (broken(piLogo) || broken(xtsyLogo)) {
+        logoFallbackNote.style.display = "block";
+      }
+    }
+    piLogo.addEventListener("error", showLogoNoteIfBroken);
+    xtsyLogo.addEventListener("error", showLogoNoteIfBroken);
+    window.addEventListener("load", () => setTimeout(showLogoNoteIfBroken, 150));
 
     function normalize(str) {
       return (str || "")
@@ -554,9 +567,13 @@
         lyricsFallback.classList.add("hidden");
       } else {
         lyricsText.textContent = "";
-        lyricsFallback.classList.toggle("hidden", hasUrl); // show fallback only if URL exists
-        // If neither lyrics nor URL exist, show a simple message
-        if (!hasUrl) {
+        if (hasUrl) {
+          lyricsFallback.classList.remove("hidden");
+          lyricsFallback.innerHTML = `
+            <h3>Lyrics link</h3>
+            <p class="muted">Full lyrics may be hosted externally. Use the button above to open them.</p>
+          `;
+        } else {
           lyricsFallback.classList.remove("hidden");
           lyricsFallback.innerHTML = `
             <h3>Lyrics not added yet</h3>
@@ -606,7 +623,7 @@
 
     backBtn.addEventListener("click", goBackToList);
 
-    // Keyboard: Escape clears search on list view, or goes back from detail view.
+    // Escape = go back from detail OR clear search
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
 
@@ -619,7 +636,7 @@
     });
 
     // Initial render
-    renderList(SONGS, "");
+    renderList(SONS = SONGS, "");
   </script>
 </body>
 </html>
