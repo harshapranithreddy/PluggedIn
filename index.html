@@ -58,11 +58,23 @@
       position: fixed;
       inset: 0;
       z-index: -2;
+    
       background:
-        radial-gradient(820px 560px at 18% 12%, rgba(255,45,45,.16), transparent 62%),
-        radial-gradient(820px 640px at 86% 10%, rgba(255,77,77,.10), transparent 65%),
-        /* IMPORTANT: solid base (no bottom darkening) */
+        /* uniform soft red haze everywhere (this removes the band) */
+        radial-gradient(1200px 900px at 50% 50%, rgba(255,45,45,.10), transparent 65%),
+    
+        /* subtle repeating vertical glow so it stays consistent while scrolling */
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,45,45,.08) 0px,
+          rgba(255,45,45,.02) 220px,
+          rgba(0,0,0,0) 520px
+        ),
+    
+        /* base */
         linear-gradient(180deg, var(--baseMid) 0%, var(--baseMid) 100%);
+    
+      background-size: cover;
       background-repeat: no-repeat;
     }
 
