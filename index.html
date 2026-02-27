@@ -2,16 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- Fix iOS safe-area + make the background extend into notches -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Plugged In — Songbook</title>
-  <meta name="theme-color" content="#07070b" />
+
+  <!-- These help iOS/Safari paint the browser UI (status bar / address bar) in your theme color.
+       NOTE: Safari will still show black sometimes depending on iOS + scroll state, but this is the best-practice setup. -->
+  <meta name="theme-color" content="#1a0507" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
   <style>
     :root{
-      --bg:#07070b;
+      --bg1:#1a0507;     /* deep red-black */
+      --bg2:#07070b;     /* near-black */
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
 
-      /* red/black accents */
       --red:#ff2d2d;
       --red2:#ff4d4d;
 
@@ -21,14 +28,21 @@
     }
 
     *{ box-sizing:border-box; }
-    html, body { height:100%; margin:0; }
+    html, body { height: 100%; margin: 0; }
 
-    /* Make background always cover full screen (top + bottom) on mobile */
+    /* IMPORTANT:
+       We set the HTML + BODY background too, so Safari's extra areas (top/bottom UI) pick up the same color.
+    */
+    html{
+      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #05050a 100%);
+      color-scheme: dark; /* helps form controls look right on iOS */
+    }
+
     body{
-      min-height: 100svh; /* modern mobile viewport */
-      color: var(--text);
+      min-height: 100svh;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: var(--bg);
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #05050a 100%);
       overflow-x:hidden;
     }
 
@@ -41,10 +55,10 @@
         radial-gradient(900px 620px at 15% 10%, rgba(255,45,45,.24), transparent 62%),
         radial-gradient(900px 740px at 85% 0%, rgba(255,77,77,.13), transparent 62%),
         radial-gradient(1200px 900px at 50% 120%, rgba(255,45,45,.11), transparent 58%),
-        linear-gradient(180deg, #07070b 0%, #05050a 100%);
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #05050a 100%);
     }
 
-    /* Subtle animated glow on top of bg */
+    /* Subtle animated glow */
     .bgGlow{
       position: fixed;
       inset: 0;
@@ -55,15 +69,15 @@
     }
     .g1,.g2{
       position:absolute;
-      width: 460px;
-      height: 460px;
+      width: 520px;
+      height: 520px;
       border-radius: 999px;
       background: rgba(255,45,45,.45);
       animation: floaty 10s ease-in-out infinite;
     }
-    .g1{ left:-200px; top:-190px; }
+    .g1{ left:-220px; top:-210px; }
     .g2{
-      right:-220px; top:-170px;
+      right:-250px; top:-210px;
       background: rgba(255,77,77,.32);
       animation-delay: -3s;
     }
@@ -72,44 +86,49 @@
       50%{ transform: translate3d(22px,18px,0) scale(1.06); }
     }
 
-    /* Page container */
+    /* Page container:
+       Add safe-area padding so content doesn't clash with notch or bottom home bar.
+    */
     .wrap{
       max-width: 980px;
       margin: 0 auto;
-      padding: 14px 14px calc(26px + env(safe-area-inset-bottom));
+      padding-left: 14px;
+      padding-right: 14px;
       padding-top: calc(14px + env(safe-area-inset-top));
+      padding-bottom: calc(26px + env(safe-area-inset-bottom));
     }
 
-    /* Center logo at top */
+    /* Top logo center */
     .topBar{
       display:flex;
       flex-direction: column;
       align-items:center;
       justify-content:center;
       gap: 10px;
-      padding: 6px 0 12px;
+      padding: 8px 0 14px;
       text-align:center;
     }
 
+    /* Increased logo size */
     .topLogo{
-      height: 56px;            /* bigger than before */
+      height: 84px; /* bigger */
       width: auto;
-      max-width: min(78vw, 320px);
+      max-width: min(86vw, 420px);
       object-fit: contain;
       display:block;
-      filter: drop-shadow(0 12px 26px rgba(0,0,0,.55));
+      filter: drop-shadow(0 14px 30px rgba(0,0,0,.60));
     }
 
     .titleBlock h1{
       margin: 0;
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1.15;
       font-weight: 900;
       letter-spacing: .2px;
     }
     .titleBlock p{
-      margin: 6px 0 0;
-      font-size: 12px;
+      margin: 8px 0 0;
+      font-size: 13px;
       color: var(--muted);
     }
 
@@ -127,7 +146,7 @@
     .searchArea{
       padding: 14px 14px 10px;
       border-bottom: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,45,45,.10), rgba(0,0,0,0));
+      background: linear-gradient(180deg, rgba(255,45,45,.12), rgba(0,0,0,0));
     }
 
     .searchWrap{
@@ -266,7 +285,7 @@
       gap:10px;
       padding: 14px 14px 10px;
       border-bottom: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,45,45,.10), rgba(0,0,0,0));
+      background: linear-gradient(180deg, rgba(255,45,45,.12), rgba(0,0,0,0));
     }
 
     .detailHeader{ padding: 12px 14px 0; }
@@ -311,11 +330,15 @@
       color: var(--muted);
     }
 
-    /* Wider screens */
     @media (min-width: 720px){
-      .wrap{ padding: 18px 18px calc(34px + env(safe-area-inset-bottom)); padding-top: calc(18px + env(safe-area-inset-top)); }
-      .topLogo{ height: 70px; max-width: 360px; }
-      .titleBlock h1{ font-size: 18px; }
+      .wrap{
+        padding-left: 18px;
+        padding-right: 18px;
+        padding-top: calc(18px + env(safe-area-inset-top));
+        padding-bottom: calc(34px + env(safe-area-inset-bottom));
+      }
+      .topLogo{ height: 96px; max-width: 480px; }
+      .titleBlock h1{ font-size: 20px; }
       #searchInput{ font-size: 16px; }
       .songTitle{ font-size: 16px; }
     }
@@ -330,9 +353,9 @@
   </div>
 
   <div class="wrap">
-    <!-- Center logo only -->
     <div class="topBar">
-      <img class="topLogo" src="./main/ba.png" alt="Logo" />
+      <!-- Make sure this file exists at: ./main/ba.png -->
+      <img class="topLogo" src="./main/ba.png" alt="Plugged In logo" />
       <div class="titleBlock">
         <h1>Plugged In Songbook</h1>
         <p>Search the setlist. Tap a song for lyrics.</p>
@@ -340,7 +363,6 @@
     </div>
 
     <main class="card">
-      <!-- Search -->
       <div class="searchArea">
         <div class="searchWrap">
           <input id="searchInput" type="search" placeholder="Search from the setlist…" autocomplete="off" />
@@ -348,7 +370,6 @@
         </div>
       </div>
 
-      <!-- List view -->
       <section id="listView">
         <div class="metaRow">
           <div>
@@ -372,7 +393,6 @@
         </div>
       </section>
 
-      <!-- Detail view -->
       <section id="detailView" class="hidden">
         <div class="detailTop">
           <button id="backBtn" class="btn ghost" type="button">← Back</button>
@@ -388,20 +408,16 @@
 
         <article class="lyricsBox">
           <pre id="lyricsText" class="lyrics"></pre>
-
-          <div id="lyricsFallback" class="lyricsFallback hidden">
-            <h3>Lyrics link</h3>
-            <p class="muted">Full lyrics may be hosted externally. Use the button above to open them.</p>
-          </div>
+          <div id="lyricsFallback" class="lyricsFallback hidden"></div>
         </article>
       </section>
     </main>
 
-    <div class="footer">Optimised for mobile</div>
+    <div class="footer">Built by XTSY Productions</div>
   </div>
 
   <script>
-    // Replace this with your final 50 songs later.
+    // Replace with your final 50 songs later.
     // Use "lyrics" ONLY if you have rights to publish them.
     // Otherwise keep lyrics empty and use lyricsUrl.
 
@@ -468,7 +484,6 @@
 
     function renderList(songs, query = "") {
       songList.innerHTML = "";
-
       countText.textContent = `${songs.length} song${songs.length === 1 ? "" : "s"} showing`;
 
       if (query) {
@@ -482,9 +497,8 @@
       if (!songs.length) {
         noResults.classList.remove("hidden");
         return;
-      } else {
-        noResults.classList.add("hidden");
       }
+      noResults.classList.add("hidden");
 
       for (const s of songs) {
         const li = document.createElement("li");
@@ -521,6 +535,9 @@
       songArtist.textContent = song.artist || "";
 
       detailActions.innerHTML = "";
+      lyricsText.textContent = "";
+      lyricsFallback.classList.add("hidden");
+      lyricsFallback.innerHTML = "";
 
       const hasInlineLyrics = normalize(song.lyrics).length > 0;
       const hasUrl = normalize(song.lyricsUrl).length > 0;
@@ -537,22 +554,11 @@
 
       if (hasInlineLyrics) {
         lyricsText.textContent = song.lyrics;
-        lyricsFallback.classList.add("hidden");
       } else {
-        lyricsText.textContent = "";
-        if (hasUrl) {
-          lyricsFallback.classList.remove("hidden");
-          lyricsFallback.innerHTML = `
-            <h3>Lyrics link</h3>
-            <p class="muted">Full lyrics may be hosted externally. Use the button above to open them.</p>
-          `;
-        } else {
-          lyricsFallback.classList.remove("hidden");
-          lyricsFallback.innerHTML = `
-            <h3>Lyrics not added yet</h3>
-            <p class="muted">We will update this soon.</p>
-          `;
-        }
+        lyricsFallback.classList.remove("hidden");
+        lyricsFallback.innerHTML = hasUrl
+          ? `<h3>Lyrics link</h3><p class="muted">Full lyrics are hosted externally. Use the button above.</p>`
+          : `<h3>Lyrics not added yet</h3><p class="muted">We will update this soon.</p>`;
       }
 
       listView.classList.add("hidden");
@@ -584,7 +590,6 @@
       searchInput.focus();
     }
 
-    // Events
     searchInput.addEventListener("input", (e) => {
       const { query, results } = filterSongs(e.target.value);
       renderList(results, query);
@@ -596,19 +601,14 @@
 
     backBtn.addEventListener("click", goBackToList);
 
-    // Escape = go back from detail OR clear search
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
 
       const detailOpen = !detailView.classList.contains("hidden");
-      if (detailOpen) {
-        goBackToList();
-        return;
-      }
-      clearSearch();
+      if (detailOpen) goBackToList();
+      else clearSearch();
     });
 
-    // Initial render
     renderList(SONGS, "");
   </script>
 </body>
