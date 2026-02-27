@@ -34,68 +34,34 @@
        If html is black, you’ll always see black “divisions”.
     */
     html{
-      background: var(--baseMid);
-      background-color: var(--baseMid);
+      height: 100%;
       color-scheme: dark;
+    
+      /* The background lives here now */
+      background:
+        radial-gradient(1100px 800px at 18% 18%, rgba(255,45,45,.14), transparent 62%),
+        radial-gradient(1100px 800px at 86% 18%, rgba(255,77,77,.10), transparent 65%),
+        radial-gradient(1200px 900px at 50% 85%, rgba(255,45,45,.08), transparent 70%),
+        linear-gradient(180deg, var(--baseMid) 0%, var(--baseMid) 100%);
+      background-color: var(--baseMid);
+      background-attachment: fixed; /* keeps it steady */
     }
     
     body{
-      min-height: 100svh;
+      min-height: 100%;
+      margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
     
-      /* solid base so the iOS status bar area matches */
-      background: var(--baseMid);
-      background-color: var(--baseMid);
+      /* IMPORTANT: no extra background here */
+      background: transparent;
     
       overflow-x: hidden;
       overscroll-behavior-y: none;
     }
 
-    /* Full-screen background (fixed) so it never ends */
-    body::before{
-      content:"";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-    
-      background:
-        /* uniform soft red haze everywhere (this removes the band) */
-        radial-gradient(1200px 900px at 50% 50%, rgba(255,45,45,.10), transparent 65%),
-    
-        /* subtle repeating vertical glow so it stays consistent while scrolling */
-        repeating-linear-gradient(
-          180deg,
-          rgba(255,45,45,.08) 0px,
-          rgba(255,45,45,.02) 220px,
-          rgba(0,0,0,0) 520px
-        ),
-    
-        /* base */
-        linear-gradient(180deg, var(--baseMid) 0%, var(--baseMid) 100%);
-    
-      background-size: cover;
-      background-repeat: no-repeat;
-    }
-
-    /* Soft animated glow layer */
-    body::after{
-      content:"";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events:none;
-      opacity: .40;
-      filter: blur(80px);
-      background:
-        radial-gradient(520px 520px at 16% 14%, rgba(255,45,45,.22), transparent 62%),
-        radial-gradient(560px 560px at 88% 12%, rgba(255,77,77,.16), transparent 65%);
-      animation: glowShift 12s ease-in-out infinite;
-    }
-
-    @keyframes glowShift{
-      0%,100%{ transform: translate3d(0,0,0) scale(1); }
-      50%{ transform: translate3d(18px,14px,0) scale(1.05); }
+    @supports (-webkit-touch-callout: none) {
+      html { background-attachment: scroll; } /* Safari behaves better */
     }
 
     /* Page container */
