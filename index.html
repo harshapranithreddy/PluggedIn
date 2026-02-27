@@ -299,13 +299,6 @@
     }
     .detailHeader p{ margin: 8px 0 0; }
 
-    .detailActions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      padding: 12px 14px 8px;
-    }
-
     .lyricsBox{
       margin: 0 14px 14px;
       border: 1px solid rgba(255,255,255,.12);
@@ -400,8 +393,6 @@
           <p class="muted" id="songArtist">Artist</p>
         </div>
 
-        <div class="detailActions" id="detailActions"></div>
-
         <article class="lyricsBox">
           <pre id="lyricsText" class="lyrics"></pre>
           <div id="lyricsFallback" class="lyricsFallback hidden"></div>
@@ -415,7 +406,6 @@
   <script>
     // Replace with your final 50 songs later.
     // Use "lyrics" ONLY if you have rights to publish them.
-    // Otherwise keep lyrics empty and use lyricsUrl.
 
     const SONGS = [
       { id: 1, title: "Wonderwall", artist: "Oasis", lyrics: "", lyricsUrl: "https://genius.com/Oasis-wonderwall-lyrics" },
@@ -448,7 +438,6 @@
     const songArtist = el("songArtist");
     const lyricsText = el("lyricsText");
     const lyricsFallback = el("lyricsFallback");
-    const detailActions = el("detailActions");
 
     function normalize(str) {
       return (str || "")
@@ -522,6 +511,9 @@
       }
     }
 
+    // UPDATED: No "Open lyrics link" button.
+    // UPDATED: "Lyrics link" -> "Lyrics"
+    // UPDATED: message -> "Paste lyrics here"
     function openSong(id) {
       const song = SONGS.find((s) => s.id === id);
       if (!song) return;
@@ -530,31 +522,20 @@
       songTitle.textContent = song.title;
       songArtist.textContent = song.artist || "";
 
-      detailActions.innerHTML = "";
       lyricsText.textContent = "";
       lyricsFallback.classList.add("hidden");
       lyricsFallback.innerHTML = "";
 
       const hasInlineLyrics = normalize(song.lyrics).length > 0;
-      const hasUrl = normalize(song.lyricsUrl).length > 0;
-
-      if (hasUrl) {
-        const a = document.createElement("a");
-        a.className = "btn";
-        a.href = song.lyricsUrl;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.textContent = "Open lyrics link";
-        detailActions.appendChild(a);
-      }
 
       if (hasInlineLyrics) {
         lyricsText.textContent = song.lyrics;
       } else {
         lyricsFallback.classList.remove("hidden");
-        lyricsFallback.innerHTML = hasUrl
-          ? `<h3>Lyrics link</h3><p class="muted">Full lyrics are hosted externally. Use the button above.</p>`
-          : `<h3>Lyrics not added yet</h3><p class="muted">We will update this soon.</p>`;
+        lyricsFallback.innerHTML = `
+          <h3>Lyrics</h3>
+          <p class="muted">Paste lyrics here</p>
+        `;
       }
 
       listView.classList.add("hidden");
