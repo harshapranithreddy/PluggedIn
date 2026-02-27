@@ -306,39 +306,46 @@
       right: calc(14px + env(safe-area-inset-right));
       bottom: calc(14px + env(safe-area-inset-bottom));
       z-index: 999;
-
-      width: 38px;
-      height: 38px;
+    
+      width: 42px;
+      height: 42px;
       border-radius: 999px;
-
+    
       display: grid;
       place-items: center;
-
+    
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.28);
-      color: rgba(255,255,255,.85);
-
-      font-size: 16px;
-      line-height: 1;
-      cursor: pointer;
-
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.82);
+    
       box-shadow: 0 14px 40px rgba(0,0,0,.45);
       backdrop-filter: blur(10px);
-      -webkit-tap-highlight-color: transparent;
-
+      -webkit-backdrop-filter: blur(10px);
+    
       opacity: 0;
       transform: translateY(8px);
       pointer-events: none;
       transition: opacity 160ms ease, transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    
+      -webkit-tap-highlight-color: transparent;
     }
+    
+    .toTopIcon{
+      width: 26px;
+      height: 26px;
+      display: block;
+    }
+    
     .toTop.show{
       opacity: .9;
       transform: translateY(0);
       pointer-events: auto;
     }
+    
     .toTop:active{
       transform: translateY(1px) scale(.98);
     }
+    
     @media (hover:hover){
       .toTop:hover{
         border-color: rgba(255,60,60,.28);
@@ -433,7 +440,12 @@
   </div>
 
   <!-- ✅ Button MUST be HTML (not inside <script>) -->
-  <button id="toTopBtn" class="toTop" type="button" aria-label="Scroll to top" title="Back to top">↑</button>
+  <button id="toTopBtn" class="toTop" type="button" aria-label="Scroll to top" title="Back to top">
+    <svg class="toTopIcon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="6"/>
+      <path d="M20 36 L32 24 L44 36" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
 
   <script>
     const SONGS = [
