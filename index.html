@@ -1,1 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plugged In — Songbook</title>
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --card: rgba(255, 255, 255, 0.06);
+      --stroke: rgba(255, 255, 255, 0.12);
+      --text: rgba(255, 255, 255, 0.92);
+      --muted: rgba(255, 255, 255, 0.62);
+      --shadow: 0 20px 60px rgba(0,0,0,0.45);
+    }
 
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 20%, rgba(139, 92, 246, 0.22), transparent 55%),
+        radial-gradient(900px 700px at 85% 10%, rgba(34, 197, 94, 0.18), transparent 50%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    .bg { position: fixed; inset: 0; pointer-events: none; }
+    .glow {
+      position: absolute;
+      width: 520px; height: 520px;
+      filter: blur(80px);
+      opacity: 0.65;
+      border-radius: 999px;
+    }
+    .glow-1 { left: -120px; top: -160px; background: rgba(139, 92, 246, 0.65); }
+    .glow-2 { right: -180px; top: -120px; background: rgba(34, 197, 94, 0.55); }
+
+    .header {
+      max-width: 980px;
+      margin: 28px auto 12px;
+      padding: 0 18px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .brand { display: flex; gap: 12px; align-items: center; }
+    .logo {
+      width: 44px; height: 44px;
+      display: grid; place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(34, 197, 94, 0.55));
+      box-shadow: var(--shadow);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .brandText h1 { margin: 0; font-size: 22px; letter-spacing: 0.2px; }
+    .brandText p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+
+    .searchWrap {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      width: min(520px, 100%);
+    }
+
+    #searchInput {
+      flex: 1;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 12px 12px;
+      border-radius: 14px;
+      outline: none;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+    }
+    #searchInput:focus {
+      border-color: rgba(139, 92, 246, 0.6);
+      box-shadow: 0 12px 45px rgba(139, 92, 246, 0.18);
+    }
+
+    .main {
+      max-width: 980px;
+      margin: 10px auto 48px;
+      padding: 0 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      backdrop-filter: blur(12px);
+    }
+
+    .cardTop {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .cardTop h2 { margin: 0; font-size: 18px; }
+    .muted { color: var(--muted); }
+
+    .pill {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.05);
+      white-space: nowrap;
+    }
+    .pill.subtle { opacity: 0.85; }
+
+    .resultsMeta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px dashed rgba(255,255,255,0.18);
+      border-radius: 16px;
+      margin-bottom: 12px;
+    }
+
+    .songList {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .songItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+    .songItem:hover {
+      transform: translateY(-1px);
+      border-color: rgba(139, 92, 246, 0.35);
+      background: rgba(139, 92, 246, 0.07);
+    }
+    .songItem:focus { outline: 2px solid rgba(139,92,246,0.35); outline-offset: 2px; }
+
+    .songLeft { display: flex; gap: 12px; align-items: center; min-width: 0; }
+    .songNum {
+      width: 30px; height: 30px;
+      border-radius: 10px;
+      display: grid; place-items: center;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.78);
+      font-size: 12px;
+      flex: 0 0 auto;
+    }
+    .songText { min-width: 0; }
+    .songTitle { font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .songArtist { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .chev { color: rgba(255,255,255,0.55); font-size: 20px; line-height: 1; }
+
+    .btn {
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.26); }
+    .btn:active { transform: translateY(0px); }
+    .btn.ghost { background: transparent; }
+    .btn.small { padding: 8px 10px; border-radius: 12px; font-size: 12px; }
+
+    .noResults {
+      text-align: center;
+      padding: 24px 12px 10px;
+    }
+    .noResults h3 { margin: 0 0 6px; }
+
+    .hidden { display: none; }
+
+    .detailTop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .detailHeader h2 { margin: 6px 0 0; font-size: 22px; }
+    .detailHeader p { margin: 6px 0 0; }
+
+    .detailActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 10px;
+    }
+
+    .lyricsBox {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.20);
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .lyrics {
+      margin: 0;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 14px;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .lyricsFallback { padding: 12px 4px; }
+
+    mark {
+      background: rgba(34, 197, 94, 0.25);
+      color: var(--text);
+      padding: 0 2px;
+      border-radius: 6px;
+    }
+
+    .footer {
+      max-width: 980px;
+      margin: 0 auto 30px;
+      padding: 0 18px;
+      text-align: center;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+  </div>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">PI</div>
+      <div class="brandText">
+        <h1>Plugged In</h1>
+        <p>Jamming Session Songbook</p>
+      </div>
+    </div>
+
+    <div class="searchWrap">
+      <input id="searchInput" type="search" placeholder="Search songs…" autocomplete="off" />
+      <button id="clearBtn" class="btn ghost" type="button" aria-label="Clear search">Clear</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- LIST VIEW -->
+    <section id="listView" class="card">
+      <div class="cardTop">
+        <div>
+          <h2>Setlist</h2>
+          <p class="muted" id="countText">Loading songs…</p>
+        </div>
+        <div class="pill" id="modePill">Search enabled</div>
+      </div>
+
+      <div id="resultsMeta" class="resultsMeta hidden">
+        <span id="resultsText"></span>
+        <button id="showAllBtn" class="btn small" type="button">Show all</button>
+      </div>
+
+      <ul id="songList" class="songList"></ul>
+
+      <div id="noResults" class="noResults hidden">
+        <h3>No matches</h3>
+        <p class="muted">Try a different spelling or click Show all.</p>
+        <button id="showAllBtn2" class="btn" type="button">Show all songs</button>
+      </div>
+    </section>
+
+    <!-- DETAIL VIEW -->
+    <section id="detailView" class="card hidden">
+      <div class="detailTop">
+        <button id="backBtn" class="btn ghost" type="button">← Back to list</button>
+        <div class="pill subtle" id="songNumberPill"></div>
+      </div>
+
+      <div class="detailHeader">
+        <h2 id="songTitle">Song Title</h2>
+        <p class="muted" id="songArtist">Artist</p>
+      </div>
+
+      <div class="detailActions" id="detailActions"></div>
+
+      <article class="lyricsBox">
+        <pre id="lyricsText" class="lyrics"></pre>
+
+        <div id="lyricsFallback" class="lyricsFallback hidden">
+          <h3>Lyrics link</h3>
+          <p class="muted">Full lyrics may be hosted externally. Use the button above to open them.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="muted">Made for Plugged In • Tap a song to view details</p>
+  </footer>
+
+  <script>
+    // Data model supports either inline lyrics OR an external lyrics URL.
+    // Later you'll replace SONGS with your actual 50-song list.
+
+    const SONGS = [
+      { id: 1, title: "Wonderwall", artist: "Oasis", lyrics: "", lyricsUrl: "https://genius.com/Oasis-wonderwall-lyrics" },
+      { id: 2, title: "Perfect", artist: "Ed Sheeran", lyrics: "", lyricsUrl: "https://genius.com/Ed-sheeran-perfect-lyrics" },
+      { id: 3, title: "Someone Like You", artist: "Adele", lyrics: "", lyricsUrl: "https://genius.com/Adele-someone-like-you-lyrics" },
+      { id: 4, title: "Yellow", artist: "Coldplay", lyrics: "", lyricsUrl: "https://genius.com/Coldplay-yellow-lyrics" },
+      { id: 5, title: "Counting Stars", artist: "OneRepublic", lyrics: "", lyricsUrl: "https://genius.com/Onerepublic-counting-stars-lyrics" },
+    ];
+
+    const el = (id) => document.getElementById(id);
+
+    const searchInput = el("searchInput");
+    const clearBtn = el("clearBtn");
+
+    const listView = el("listView");
+    const detailView = el("detailView");
+
+    const songList = el("songList");
+    const countText = el("countText");
+
+    const resultsMeta = el("resultsMeta");
+    const resultsText = el("resultsText");
+    const showAllBtn = el("showAllBtn");
+    const showAllBtn2 = el("showAllBtn2");
+    const noResults = el("noResults");
+
+    const backBtn = el("backBtn");
+    const songNumberPill = el("songNumberPill");
+    const songTitle = el("songTitle");
+    const songArtist = el("songArtist");
+    const lyricsText = el("lyricsText");
+    const lyricsFallback = el("lyricsFallback");
+    const detailActions = el("detailActions");
+
+    function normalize(str) {
+      return (str || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
+
+    function escapeRegExp(s) {
+      return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function escapeHtml(s) {
+      return (s || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function highlight(text, query) {
+      if (!query) return escapeHtml(text);
+      const safe = escapeHtml(text);
+      const q = escapeRegExp(query);
+      return safe.replace(new RegExp(`(${q})`, "ig"), "<mark>$1</mark>");
+    }
+
+    function renderList(songs, query = "") {
+      songList.innerHTML = "";
+
+      countText.textContent = `${songs.length} song${songs.length === 1 ? "" : "s"} showing`;
+
+      if (query) {
+        resultsMeta.classList.remove("hidden");
+        resultsText.textContent = `Results for "${query}"`;
+      } else {
+        resultsMeta.classList.add("hidden");
+        resultsText.textContent = "";
+      }
+
+      if (!songs.length) {
+        noResults.classList.remove("hidden");
+        return;
+      } else {
+        noResults.classList.add("hidden");
+      }
+
+      for (const s of songs) {
+        const li = document.createElement("li");
+        li.className = "songItem";
+        li.setAttribute("role", "button");
+        li.tabIndex = 0;
+
+        li.innerHTML = `
+          <div class="songLeft">
+            <div class="songNum">${s.id}</div>
+            <div class="songText">
+              <div class="songTitle">${highlight(s.title, query)}</div>
+              <div class="songArtist">${highlight(s.artist, query)}</div>
+            </div>
+          </div>
+          <div class="chev">›</div>
+        `;
+
+        li.addEventListener("click", () => openSong(s.id));
+        li.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") openSong(s.id);
+        });
+
+        songList.appendChild(li);
+      }
+    }
+
+    function openSong(id) {
+      const song = SONGS.find((s) => s.id === id);
+      if (!song) return;
+
+      songNumberPill.textContent = `Song #${song.id}`;
+      songTitle.textContent = song.title;
+      songArtist.textContent = song.artist || "";
+
+      detailActions.innerHTML = "";
+
+      const hasInlineLyrics = normalize(song.lyrics).length > 0;
+      const hasUrl = normalize(song.lyricsUrl).length > 0;
+
+      if (hasUrl) {
+        const a = document.createElement("a");
+        a.className = "btn";
+        a.href = song.lyricsUrl;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = "Open lyrics link";
+        detailActions.appendChild(a);
+      }
+
+      // Show lyrics if provided, otherwise show fallback message
+      if (hasInlineLyrics) {
+        lyricsText.textContent = song.lyrics;
+        lyricsText.classList.remove("hidden");
+        lyricsFallback.classList.add("hidden");
+      } else {
+        lyricsText.textContent = "";
+        lyricsFallback.classList.remove("hidden");
+      }
+
+      // Move to detail view
+      listView.classList.add("hidden");
+      detailView.classList.remove("hidden");
+
+      // Keep the search term in place (nice UX), but optional:
+      // searchInput.blur();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goBackToList() {
+      detailView.classList.add("hidden");
+      listView.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function filterSongs(queryRaw) {
+      const query = normalize(queryRaw);
+      if (!query) return { query: "", results: SONGS };
+
+      const results = SONGS.filter((s) => {
+        const hay = normalize(`${s.title} ${s.artist}`);
+        return hay.includes(query);
+      });
+
+      return { query: queryRaw.trim(), results };
+    }
+
+    function clearSearch() {
+      searchInput.value = "";
+      renderList(SONGS);
+      searchInput.focus();
+    }
+
+    // Events
+    searchInput.addEventListener("input", (e) => {
+      const { query, results } = filterSongs(e.target.value);
+      renderList(results, query);
+    });
+
+    clearBtn.addEventListener("click", clearSearch);
+    showAllBtn.addEventListener("click", clearSearch);
+    showAllBtn2.addEventListener("click", clearSearch);
+
+    backBtn.addEventListener("click", goBackToList);
+
+    // Keyboard: Escape clears search when on list view, or goes back from detail view.
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+
+      const detailOpen = !detailView.classList.contains("hidden");
+      if (detailOpen) {
+        goBackToList();
+        return;
+      }
+      clearSearch();
+    });
+
+    // Initial render
+    renderList(SONGS);
+  </script>
+</body>
+</html>
