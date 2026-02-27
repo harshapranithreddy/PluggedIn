@@ -25,16 +25,6 @@
 
     *{ box-sizing:border-box; }
     html, body { margin:0; padding:0; }
-    html, body{
-      height: 100%;
-      overflow: hidden;   /* stop Safari page scroll */
-    }
-
-.wrap{
-  height: 100dvh;
-  overflow-y: auto;               /* scroll inside */
-  -webkit-overflow-scrolling: touch;
-}
 
     /* IMPORTANT: html + body must have the same solid base so overscroll shows the same color */
     html{
@@ -45,6 +35,7 @@
     }
 
     body{
+      min-height:100dvh;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
 
