@@ -33,35 +33,47 @@
        Set html + body backgrounds (this is what iOS shows in top/bottom bars & overscroll areas).
        If html is black, you’ll always see black “divisions”.
     */
-    html{
-      height: 100%;
-      color-scheme: dark;
+    html, body { height: 100%; margin: 0; }
     
-      /* The background lives here now */
-      background:
-        radial-gradient(1100px 800px at 18% 18%, rgba(255,45,45,.14), transparent 62%),
-        radial-gradient(1100px 800px at 86% 18%, rgba(255,77,77,.10), transparent 65%),
-        radial-gradient(1200px 900px at 50% 85%, rgba(255,45,45,.08), transparent 70%),
-        linear-gradient(180deg, var(--baseMid) 0%, var(--baseMid) 100%);
+    html{
+      background: var(--baseMid);
       background-color: var(--baseMid);
-      background-attachment: fixed; /* keeps it steady */
+      color-scheme: dark;
     }
     
     body{
       min-height: 100%;
-      margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
-    
-      /* IMPORTANT: no extra background here */
-      background: transparent;
-    
+      background: transparent;              /* important */
       overflow-x: hidden;
       overscroll-behavior-y: none;
     }
-
     @supports (-webkit-touch-callout: none) {
       html { background-attachment: scroll; } /* Safari behaves better */
+    }
+
+    .bg{
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+    
+      /* This forces iOS to keep it on one stable layer */
+      transform: translate3d(0,0,0);
+      will-change: transform;
+    
+      /* Solid base first (prevents any “black” showing through) */
+      background-color: var(--baseMid);
+    
+      /* No blur filters. Make gradients large + soft instead. */
+      background-image:
+        radial-gradient(1200px 900px at 18% 18%, rgba(255,45,45,.16), transparent 62%),
+        radial-gradient(1200px 900px at 86% 18%, rgba(255,77,77,.10), transparent 65%),
+        radial-gradient(1400px 1100px at 50% 85%, rgba(255,45,45,.10), transparent 70%),
+        linear-gradient(180deg, var(--baseMid) 0%, var(--baseMid) 100%);
+    
+      background-repeat: no-repeat;
+      background-size: cover;
     }
 
     /* Page container */
@@ -318,6 +330,7 @@
 </head>
 
 <body>
+  <div class="bg" aria-hidden="true"></div>
   <div class="wrap">
     <div class="topBar">
       <!-- Make sure this exists: ./main/ba.png -->
