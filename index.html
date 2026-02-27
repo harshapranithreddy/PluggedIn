@@ -13,7 +13,7 @@
 
   <style>
     :root{
-      /* Base background (keep consistent everywhere) */
+      /* Make the base NOT pure black, so Safari top/bottom never looks like a “cut” */
       --baseTop:#2a0a0d;   /* deep red-black */
       --baseMid:#120507;   /* red-black */
       --baseBot:#07070b;   /* near-black */
@@ -29,7 +29,10 @@
     *{ box-sizing:border-box; }
     html, body { height: 100%; margin: 0; }
 
-    /* Make html + body identical so iOS bars / overscroll areas match */
+    /* IMPORTANT:
+       Set html + body backgrounds (this is what iOS shows in top/bottom bars & overscroll areas).
+       If html is black, you’ll always see black “divisions”.
+    */
     html{
       background: linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
       background-color: var(--baseMid);
@@ -41,52 +44,47 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
 
-      /* Same gradient as html */
+      /* Same as html so there’s never a mismatch */
       background: linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
       background-color: var(--baseMid);
 
       overflow-x: hidden;
+
+      /* Helps reduce weird “bounce” edges on some iOS versions */
       overscroll-behavior-y: none;
     }
 
-    /* EVEN BACKGROUND:
-       - Removed the bottom glow that caused a bright band near Safari toolbar
-       - Kept only top/side subtle glows
-       - Reduced intensity so it looks consistent across scroll + UI chrome
-    */
+    /* Full-screen background (fixed) so it never ends */
     body::before{
       content:"";
       position: fixed;
-      inset: 0;                 /* IMPORTANT: no negative inset (can amplify edges) */
+      inset: -40px;             /* extend beyond edges to avoid any seams */
       z-index: -2;
       background:
-        radial-gradient(820px 560px at 18% 12%, rgba(255,45,45,.16), transparent 62%),
-        radial-gradient(820px 640px at 86% 10%, rgba(255,77,77,.10), transparent 65%),
+        radial-gradient(900px 620px at 15% 10%, rgba(255,45,45,.24), transparent 62%),
+        radial-gradient(900px 740px at 85% 0%, rgba(255,77,77,.13), transparent 62%),
+        radial-gradient(1200px 900px at 50% 120%, rgba(255,45,45,.11), transparent 58%),
         linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
-      background-repeat: no-repeat;
-      background-attachment: fixed;
     }
 
-    /* Soft glow layer (kept subtle + centered top so it doesn’t brighten bottom) */
+    /* Soft animated glow layer */
     body::after{
       content:"";
       position: fixed;
-      inset: 0;
+      inset: -40px;             /* extend beyond edges to avoid any seams */
       z-index: -1;
       pointer-events:none;
-
-      opacity: .45;            /* reduced to avoid banding */
-      filter: blur(80px);
-
+      opacity: .75;
+      filter: blur(72px);
       background:
-        radial-gradient(520px 520px at 16% 14%, rgba(255,45,45,.26), transparent 62%),
-        radial-gradient(560px 560px at 88% 12%, rgba(255,77,77,.18), transparent 65%);
-      animation: glowShift 12s ease-in-out infinite;
+        radial-gradient(520px 520px at 12% 10%, rgba(255,45,45,.45), transparent 60%),
+        radial-gradient(560px 560px at 90% 8%, rgba(255,77,77,.30), transparent 62%);
+      animation: glowShift 10s ease-in-out infinite;
     }
 
     @keyframes glowShift{
       0%,100%{ transform: translate3d(0,0,0) scale(1); }
-      50%{ transform: translate3d(12px,10px,0) scale(1.03); }
+      50%{ transform: translate3d(18px,14px,0) scale(1.05); }
     }
 
     /* Page container */
@@ -97,6 +95,7 @@
       padding-left: 14px;
       padding-right: 14px;
 
+      /* Safe areas so content isn’t under notch/home bar */
       padding-top: calc(14px + env(safe-area-inset-top));
       padding-bottom: calc(26px + env(safe-area-inset-bottom));
     }
@@ -112,6 +111,7 @@
       text-align:center;
     }
 
+    /* Bigger logo */
     .topLogo{
       height: 96px;
       width: auto;
@@ -148,7 +148,7 @@
     .searchArea{
       padding: 14px 14px 10px;
       border-bottom: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,45,45,.10), rgba(0,0,0,0));
+      background: linear-gradient(180deg, rgba(255,45,45,.12), rgba(0,0,0,0));
     }
 
     .searchWrap{
@@ -169,8 +169,8 @@
       box-shadow: 0 10px 35px rgba(0,0,0,.28);
     }
     #searchInput:focus{
-      border-color: rgba(255,45,45,.55);
-      box-shadow: 0 14px 45px rgba(255,45,45,.14);
+      border-color: rgba(255,45,45,.60);
+      box-shadow: 0 14px 45px rgba(255,45,45,.16);
     }
 
     .btn{
@@ -241,8 +241,8 @@
       -webkit-tap-highlight-color: transparent;
     }
     .songItem:hover{
-      border-color: rgba(255,45,45,.30);
-      background: rgba(255,45,45,.07);
+      border-color: rgba(255,45,45,.35);
+      background: rgba(255,45,45,.09);
       transform: translateY(-1px);
     }
     .songItem:active{ transform: translateY(0px) scale(.995); }
@@ -253,7 +253,7 @@
       border-radius: 12px;
       display:grid; place-items:center;
       border: 1px solid rgba(255,255,255,.12);
-      background: linear-gradient(135deg, rgba(255,45,45,.18), rgba(0,0,0,.18));
+      background: linear-gradient(135deg, rgba(255,45,45,.22), rgba(0,0,0,.18));
       color: rgba(255,255,255,.84);
       font-size: 12px;
       flex: 0 0 auto;
@@ -273,7 +273,7 @@
     .chev{ color: rgba(255,255,255,.55); font-size: 22px; line-height: 1; }
 
     mark{
-      background: rgba(255,45,45,.22);
+      background: rgba(255,45,45,.26);
       color: var(--text);
       padding: 0 2px;
       border-radius: 6px;
@@ -287,7 +287,7 @@
       gap:10px;
       padding: 14px 14px 10px;
       border-bottom: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,45,45,.10), rgba(0,0,0,0));
+      background: linear-gradient(180deg, rgba(255,45,45,.12), rgba(0,0,0,0));
     }
 
     .detailHeader{ padding: 12px 14px 0; }
@@ -343,6 +343,7 @@
 <body>
   <div class="wrap">
     <div class="topBar">
+      <!-- Make sure this exists: ./main/ba.png -->
       <img class="topLogo" src="./main/ba.png" alt="Plugged In logo" />
       <div class="titleBlock">
         <h1>Plugged In Songbook</h1>
@@ -403,6 +404,9 @@
   </div>
 
   <script>
+    // Replace with your final 50 songs later.
+    // Use "lyrics" ONLY if you have rights to publish them.
+
     const SONGS = [
       { id: 1, title: "Wonderwall", artist: "Oasis", lyrics: "", lyricsUrl: "https://genius.com/Oasis-wonderwall-lyrics" },
       { id: 2, title: "Perfect", artist: "Ed Sheeran", lyrics: "", lyricsUrl: "https://genius.com/Ed-sheeran-perfect-lyrics" },
@@ -507,6 +511,9 @@
       }
     }
 
+    // UPDATED: No "Open lyrics link" button.
+    // UPDATED: "Lyrics link" -> "Lyrics"
+    // UPDATED: message -> "Paste lyrics here"
     function openSong(id) {
       const song = SONGS.find((s) => s.id === id);
       if (!song) return;
@@ -579,7 +586,7 @@
       else clearSearch();
     });
 
-    renderList(SONS, "");
+    renderList(SONGS, "");
   </script>
 </body>
 </html>
