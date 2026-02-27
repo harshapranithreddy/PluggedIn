@@ -61,9 +61,9 @@
       background:
         radial-gradient(820px 560px at 18% 12%, rgba(255,45,45,.16), transparent 62%),
         radial-gradient(820px 640px at 86% 10%, rgba(255,77,77,.10), transparent 65%),
-        linear-gradient(180deg, var(--baseMid) 0%, var(--baseMid) 35%, var(--baseBot) 100%);
+        /* IMPORTANT: solid base (no bottom darkening) */
+        linear-gradient(180deg, var(--baseMid) 0%, var(--baseMid) 100%);
       background-repeat: no-repeat;
-      background-attachment: fixed;
     }
 
     /* Soft animated glow layer */
