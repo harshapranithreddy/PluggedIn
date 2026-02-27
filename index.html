@@ -2,25 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- Fix iOS safe-area + make the background extend into notches -->
+  <!-- iOS safe-area support -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Plugged In — Songbook</title>
 
-  <!-- These help iOS/Safari paint the browser UI (status bar / address bar) in your theme color.
-       NOTE: Safari will still show black sometimes depending on iOS + scroll state, but this is the best-practice setup. -->
-  <meta name="theme-color" content="#1a0507" />
+  <!-- Helps Safari color the browser UI to match your page -->
+  <meta name="theme-color" content="#120507" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <style>
     :root{
-      --bg1:#1a0507;     /* deep red-black */
-      --bg2:#07070b;     /* near-black */
+      /* Make the base NOT pure black, so Safari top/bottom never looks like a “cut” */
+      --baseTop:#2a0a0d;   /* deep red-black */
+      --baseMid:#120507;   /* red-black */
+      --baseBot:#07070b;   /* near-black */
+
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
-
-      --red:#ff2d2d;
-      --red2:#ff4d4d;
 
       --card:rgba(255,255,255,.06);
       --stroke:rgba(255,255,255,.12);
@@ -31,89 +30,92 @@
     html, body { height: 100%; margin: 0; }
 
     /* IMPORTANT:
-       We set the HTML + BODY background too, so Safari's extra areas (top/bottom UI) pick up the same color.
+       Set html + body backgrounds (this is what iOS shows in top/bottom bars & overscroll areas).
+       If html is black, you’ll always see black “divisions”.
     */
     html{
-      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #05050a 100%);
-      color-scheme: dark; /* helps form controls look right on iOS */
+      background: linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
+      background-color: var(--baseMid);
+      color-scheme: dark;
     }
 
     body{
       min-height: 100svh;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
-      background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #05050a 100%);
-      overflow-x:hidden;
+
+      /* Same as html so there’s never a mismatch */
+      background: linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
+      background-color: var(--baseMid);
+
+      overflow-x: hidden;
+
+      /* Helps reduce weird “bounce” edges on some iOS versions */
+      overscroll-behavior-y: none;
     }
 
-    /* Full-screen background layer (fixed, so it never "cuts off") */
-    .bgLayer{
+    /* Full-screen background (fixed) so it never ends */
+    body::before{
+      content:"";
       position: fixed;
-      inset: 0;
+      inset: -40px;             /* extend beyond edges to avoid any seams */
       z-index: -2;
       background:
         radial-gradient(900px 620px at 15% 10%, rgba(255,45,45,.24), transparent 62%),
         radial-gradient(900px 740px at 85% 0%, rgba(255,77,77,.13), transparent 62%),
         radial-gradient(1200px 900px at 50% 120%, rgba(255,45,45,.11), transparent 58%),
-        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, #05050a 100%);
+        linear-gradient(180deg, var(--baseTop) 0%, var(--baseMid) 45%, var(--baseBot) 100%);
     }
 
-    /* Subtle animated glow */
-    .bgGlow{
+    /* Soft animated glow layer */
+    body::after{
+      content:"";
       position: fixed;
-      inset: 0;
+      inset: -40px;             /* extend beyond edges to avoid any seams */
       z-index: -1;
       pointer-events:none;
-      opacity: .78;
+      opacity: .75;
       filter: blur(72px);
-    }
-    .g1,.g2{
-      position:absolute;
-      width: 520px;
-      height: 520px;
-      border-radius: 999px;
-      background: rgba(255,45,45,.45);
-      animation: floaty 10s ease-in-out infinite;
-    }
-    .g1{ left:-220px; top:-210px; }
-    .g2{
-      right:-250px; top:-210px;
-      background: rgba(255,77,77,.32);
-      animation-delay: -3s;
-    }
-    @keyframes floaty{
-      0%,100%{ transform: translate3d(0,0,0) scale(1); }
-      50%{ transform: translate3d(22px,18px,0) scale(1.06); }
+      background:
+        radial-gradient(520px 520px at 12% 10%, rgba(255,45,45,.45), transparent 60%),
+        radial-gradient(560px 560px at 90% 8%, rgba(255,77,77,.30), transparent 62%);
+      animation: glowShift 10s ease-in-out infinite;
     }
 
-    /* Page container:
-       Add safe-area padding so content doesn't clash with notch or bottom home bar.
-    */
+    @keyframes glowShift{
+      0%,100%{ transform: translate3d(0,0,0) scale(1); }
+      50%{ transform: translate3d(18px,14px,0) scale(1.05); }
+    }
+
+    /* Page container */
     .wrap{
       max-width: 980px;
       margin: 0 auto;
+
       padding-left: 14px;
       padding-right: 14px;
+
+      /* Safe areas so content isn’t under notch/home bar */
       padding-top: calc(14px + env(safe-area-inset-top));
       padding-bottom: calc(26px + env(safe-area-inset-bottom));
     }
 
-    /* Top logo center */
+    /* Top logo */
     .topBar{
       display:flex;
       flex-direction: column;
       align-items:center;
       justify-content:center;
       gap: 10px;
-      padding: 8px 0 14px;
+      padding: 10px 0 14px;
       text-align:center;
     }
 
-    /* Increased logo size */
+    /* Bigger logo */
     .topLogo{
-      height: 84px; /* bigger */
+      height: 96px;
       width: auto;
-      max-width: min(86vw, 420px);
+      max-width: min(88vw, 460px);
       object-fit: contain;
       display:block;
       filter: drop-shadow(0 14px 30px rgba(0,0,0,.60));
@@ -337,7 +339,7 @@
         padding-top: calc(18px + env(safe-area-inset-top));
         padding-bottom: calc(34px + env(safe-area-inset-bottom));
       }
-      .topLogo{ height: 96px; max-width: 480px; }
+      .topLogo{ height: 110px; max-width: 520px; }
       .titleBlock h1{ font-size: 20px; }
       #searchInput{ font-size: 16px; }
       .songTitle{ font-size: 16px; }
@@ -346,15 +348,9 @@
 </head>
 
 <body>
-  <div class="bgLayer"></div>
-  <div class="bgGlow">
-    <div class="g1"></div>
-    <div class="g2"></div>
-  </div>
-
   <div class="wrap">
     <div class="topBar">
-      <!-- Make sure this file exists at: ./main/ba.png -->
+      <!-- Make sure this exists: ./main/ba.png -->
       <img class="topLogo" src="./main/ba.png" alt="Plugged In logo" />
       <div class="titleBlock">
         <h1>Plugged In Songbook</h1>
