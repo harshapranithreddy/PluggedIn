@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Plugged In - Songbook</title>
 
-  <!-- Make Safari UI match the page better (slightly warmer than pure near-black) -->
   <meta name="theme-color" content="#160709" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <style>
     :root{
-      /* Slightly less “red wall”, more premium deep-maroon */
       --baseMid:#160709;
 
       --text:rgba(255,255,255,.92);
@@ -26,7 +24,6 @@
     *{ box-sizing:border-box; }
     html, body { margin:0; padding:0; }
 
-    /* IMPORTANT: html + body must have the same solid base so overscroll shows the same color */
     html{
       height:100%;
       background: var(--baseMid);
@@ -38,17 +35,12 @@
       min-height:100dvh;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
-
-      /* DO NOT make body transparent on iOS if you want clean overscroll */
       background: var(--baseMid);
       background-color: var(--baseMid);
-
       overflow-x:hidden;
       -webkit-text-size-adjust: 100%;
     }
 
-    /* Background layer:
-       Extend beyond viewport so rubber-band overscroll never exposes a different shade */
     .bg{
       position: fixed;
       left: 0;
@@ -60,13 +52,11 @@
 
       background-color: var(--baseMid);
 
-      /* Softer + less red + more “moody” */
       background-image:
         radial-gradient(1200px 900px at 16% 18%, rgba(255,55,55,.10), transparent 62%),
         radial-gradient(1200px 900px at 86% 16%, rgba(255,90,90,.06), transparent 65%),
         radial-gradient(1400px 1100px at 50% 88%, rgba(255,55,55,.07), transparent 70%),
 
-        /* subtle vignette to stop “flat red” look */
         radial-gradient(1400px 900px at 50% 0%, rgba(0,0,0,.22), transparent 60%),
         radial-gradient(1400px 900px at 50% 100%, rgba(0,0,0,.26), transparent 60%),
 
@@ -76,7 +66,6 @@
       background-size: cover;
     }
 
-    /* Page container */
     .wrap{
       max-width: 980px;
       margin: 0 auto;
@@ -120,7 +109,6 @@
       color: var(--muted);
     }
 
-    /* Card */
     .card{
       background: var(--card);
       border: 1px solid var(--stroke);
@@ -128,17 +116,15 @@
       box-shadow: var(--shadow);
       overflow:hidden;
 
-      /* Looks great on desktop, but causes iOS seams sometimes */
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
 
-    /* iOS Safari stability: remove backdrop-filter to prevent banding/seams */
     @supports (-webkit-touch-callout: none) {
       .card{
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
-        background: rgba(18, 7, 9, .72); /* similar look, but rock-solid on iPhone */
+        background: rgba(18, 7, 9, .72);
       }
     }
 
@@ -314,51 +300,49 @@
     .lyricsFallback h3{ margin:0 0 6px; font-size: 16px; }
     .lyricsFallback p{ margin:0; }
 
+    /* Scroll to top button */
     .toTop{
       position: fixed;
       right: calc(14px + env(safe-area-inset-right));
       bottom: calc(14px + env(safe-area-inset-bottom));
       z-index: 999;
-    
+
       width: 38px;
       height: 38px;
       border-radius: 999px;
-    
+
       display: grid;
       place-items: center;
-    
+
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.28);
       color: rgba(255,255,255,.85);
-    
+
       font-size: 16px;
       line-height: 1;
       cursor: pointer;
-    
+
       box-shadow: 0 14px 40px rgba(0,0,0,.45);
       backdrop-filter: blur(10px);
-    
+      -webkit-tap-highlight-color: transparent;
+
       opacity: 0;
       transform: translateY(8px);
       pointer-events: none;
       transition: opacity 160ms ease, transform 160ms ease, border-color 160ms ease, background 160ms ease;
-      -webkit-tap-highlight-color: transparent;
     }
-    
     .toTop.show{
       opacity: .9;
       transform: translateY(0);
       pointer-events: auto;
     }
-    
     .toTop:active{
       transform: translateY(1px) scale(.98);
     }
-    
     @media (hover:hover){
       .toTop:hover{
-        border-color: rgba(255,45,45,.35);
-        background: rgba(255,45,45,.10);
+        border-color: rgba(255,60,60,.28);
+        background: rgba(255,60,60,.10);
       }
     }
 
@@ -448,11 +432,10 @@
     <div class="footer">Built by XTSY Productions</div>
   </div>
 
+  <!-- ✅ Button MUST be HTML (not inside <script>) -->
+  <button id="toTopBtn" class="toTop" type="button" aria-label="Scroll to top" title="Back to top">↑</button>
+
   <script>
-        <button id="toTopBtn" class="toTop" type="button" aria-label="Scroll to top" title="Back to top">
-        ↑
-      </button>
-    
     const SONGS = [
       { id: 1, title: "O Sakkanoda", artist: "Dhee", lyrics: "" },
       { id: 2, title: "Rangamma Mangamma", artist: "M. M. Manasi", lyrics: "" },
@@ -529,6 +512,8 @@
     const songArtist = el("songArtist");
     const lyricsText = el("lyricsText");
     const lyricsFallback = el("lyricsFallback");
+
+    const toTopBtn = el("toTopBtn");
 
     function normalize(str) {
       return (str || "")
@@ -629,12 +614,14 @@
       listView.classList.add("hidden");
       detailView.classList.remove("hidden");
       window.scrollTo({ top: 0, behavior: "smooth" });
+      updateToTopBtn();
     }
 
     function goBackToList() {
       detailView.classList.add("hidden");
       listView.classList.remove("hidden");
       window.scrollTo({ top: 0, behavior: "smooth" });
+      updateToTopBtn();
     }
 
     function filterSongs(queryRaw) {
@@ -674,51 +661,27 @@
       else clearSearch();
     });
 
-    const toTopBtn = el("toTopBtn");
-
-    function getScrollTarget(){
-      // If you switched to "wrap is the scroller" (overflow-y:auto), use that.
-      // Otherwise fallback to window.
-      const wrap = document.querySelector(".wrap");
-      const wrapIsScrollable = wrap && getComputedStyle(wrap).overflowY !== "visible" && getComputedStyle(wrap).overflowY !== "hidden";
-      return wrapIsScrollable ? wrap : window;
-    }
-    
-    const scrollTarget = getScrollTarget();
-    
+    // Scroll-to-top logic (works for window scrolling)
     function getScrollTop(){
-      if (scrollTarget === window) return window.scrollY || document.documentElement.scrollTop || 0;
-      return scrollTarget.scrollTop || 0;
+      return window.scrollY || document.documentElement.scrollTop || 0;
     }
-    
+
     function scrollToTop(){
-      if (scrollTarget === window) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        scrollTarget.scrollTo({ top: 0, behavior: "smooth" });
-      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-    
+
     function updateToTopBtn(){
       const y = getScrollTop();
       if (y > 220) toTopBtn.classList.add("show");
       else toTopBtn.classList.remove("show");
     }
-    
+
     toTopBtn.addEventListener("click", scrollToTop);
-    
-    // Listen to the right scroll source
-    if (scrollTarget === window) {
-      window.addEventListener("scroll", updateToTopBtn, { passive: true });
-    } else {
-      scrollTarget.addEventListener("scroll", updateToTopBtn, { passive: true });
-    }
-    
-    // Initial state
-    updateToTopBtn();
-    
+    window.addEventListener("scroll", updateToTopBtn, { passive: true });
+
+    // Initial render
     renderList(SONGS, "");
-    
+    updateToTopBtn();
   </script>
 </body>
 </html>
