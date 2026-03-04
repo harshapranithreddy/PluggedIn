@@ -469,59 +469,403 @@
   </button>
 
   <script>
-    const SONGS = [
-      { id: 1, title: "O Sakkanoda", artist: "Dhee", lyrics: "" },
-      { id: 2, title: "Rangamma Mangamma", artist: "M. M. Manasi", lyrics: "" },
-      { id: 3, title: "Barso Re", artist: "Shreya Ghoshal, Uday Mazumdar", lyrics: "" },
-      { id: 4, title: "Nanne Nanne Chusthu", artist: "Tippu, Pop Shalini", lyrics: "" },
-      { id: 5, title: "Chiru Chiru", artist: "", lyrics: "" },
-      { id: 6, title: "Zara Zara", artist: "Bombay Jayashri", lyrics: "" },
-      { id: 7, title: "Vaseegara", artist: "Bombay Jayashri", lyrics: "" },
-      { id: 8, title: "Manohara", artist: "", lyrics: "" },
-      { id: 9, title: "Konte Choopu", artist: "", lyrics: "" },
-      { id: 10, title: "Maahi Ve", artist: "", lyrics: "" },
-      { id: 11, title: "Sirivennela", artist: "", lyrics: "" },
-      { id: 12, title: "Haule Haule", artist: "Sukhwinder Singh", lyrics: "" },
-      { id: 13, title: "Lag Ja Gale", artist: "Lata Mangeshkar", lyrics: "" },
-      { id: 14, title: "Vintunnavaa", artist: "Shreya Ghoshal, Karthik", lyrics: "" },
-      { id: 15, title: "Kannazhaga", artist: "Dhanush, Shruti Haasan", lyrics: "" },
-      { id: 16, title: "Tera Hone Laga Hoon", artist: "Atif Aslam, Alisha Chinai", lyrics: "" },
-      { id: 17, title: "Te Amo", artist: "Ash King, Sunidhi Chauhan", lyrics: "" },
-      { id: 18, title: "Nuvvunte Chaley", artist: "", lyrics: "" },
-      { id: 19, title: "Na Cheli Rojave", artist: "", lyrics: "" },
-      { id: 20, title: "Kailove Chedugudu", artist: "", lyrics: "" },
-      { id: 21, title: "Hello Rammante", artist: "", lyrics: "" },
-      { id: 22, title: "Kya Mujhe Pyaar Hai", artist: "", lyrics: "" },
-      { id: 23, title: "Cheliya Cheliya", artist: "", lyrics: "" },
-      { id: 24, title: "Telusa Manasa", artist: "", lyrics: "" },
-      { id: 25, title: "Oka Maaru", artist: "", lyrics: "" },
-      { id: 26, title: "Hosanna", artist: "Vijay Prakash, Suzanne D’Mello, Blaaze", lyrics: "" },
-      { id: 27, title: "Malare", artist: "", lyrics: "" },
-      { id: 28, title: "My Heart Is Beating", artist: "", lyrics: "" },
-      { id: 29, title: "Mayya Jinna Sona", artist: "", lyrics: "" },
-      { id: 30, title: "Jabilli Kosam", artist: "", lyrics: "" },
-      { id: 31, title: "Hello Guru Prema Kosame", artist: "", lyrics: "" },
-      { id: 32, title: "O Prema (Vasu)", artist: "", lyrics: "" },
-      { id: 33, title: "Paataku Pranam", artist: "", lyrics: "" },
-      { id: 34, title: "Madhuvarame", artist: "", lyrics: "" },
-      { id: 35, title: "Khwaja Mere Khwaja", artist: "", lyrics: "" },
-      { id: 36, title: "Tum Hi Ho", artist: "Arijit Singh", lyrics: "" },
-      { id: 37, title: "Enno Raatrulosthayi", artist: "", lyrics: "" },
-      { id: 38, title: "Pehla Nasha", artist: "Udit Narayan, Sadhana Sargam", lyrics: "" },
-      { id: 39, title: "Kadalalle", artist: "", lyrics: "" },
-      { id: 40, title: "Mere Sapnon Ki Rani", artist: "", lyrics: "" },
-      { id: 41, title: "Suthi Suthi", artist: "", lyrics: "" },
-      { id: 42, title: "Andhama Andhuma", artist: "", lyrics: "" },
-      { id: 43, title: "Pottala Muttaye", artist: "", lyrics: "" },
-      { id: 44, title: "Subhalekha", artist: "", lyrics: "" },
-      { id: 45, title: "Bhoomi Enna Suthudhe", artist: "", lyrics: "" },
-      { id: 46, title: "Udhungada Sangu", artist: "", lyrics: "" },
-      { id: 47, title: "Jaamu Raathiri", artist: "", lyrics: "" },
-      { id: 48, title: "Gehra Hua", artist: "", lyrics: "" },
-      { id: 49, title: "Bommanu Geesthey", artist: "", lyrics: "" },
-      { id: 50, title: "Thangamey", artist: "", lyrics: "" },
-    ];
+const SONGS = [
+  { id: 1, title: "Gehra Hua", artist: "Arjit Singh, Shaswant, Armaan Khan", lyrics: `Teri mohabbat mein jalna bhi hai
+Aur tujhse bachke hi chalna bhi hai
+Kuch rang apna badalna bhi hai
+Maine dhalna tere rang mein hai sada
+Tu chaand hai ek dhadakta hua
+Chori se mujhko hi takta hua
+Seene se lag ke chamakta hua
+Meri jannat ka rasta, tu hi tu hua
+[Refrain]
+Tu agar meri, yeh hawayen teri
+Tu agar meri, saari raahein teri
+Tu agar meri, main hoon tera
 
+
+Betaab-sa mohabbat ka tu inqalaab hai
+Mera jahaan teri baahon mein khwaab, khwaab hai
+
+
+Gehra hua, gehra hua
+Rang aashiqui gehra hua
+Gehra hua, gehra hua
+Dariya-dua gehra hua` },
+  
+  { id: 2, title: "Thangamey", artist: "Anirudh Ravichandran", lyrics: `Thangamey Onnathaan Thedi Vandhen Naane!
+Vairame Orunaal Onna Thookuvene!
+
+Rasaathiya Rathiri Pathen
+Rowdy Paiya Romantic Aanen
+Ragasiyama Route Ah Pottu
+Kadathanum Kadathanum Kadathanum Onna..
+
+Vaai Moodiye Vaaya Pozhanthen
+Verum Kaalula Vinveli Ponen
+Verapa Irunthaalum Valinjen
+Niruthanum Niruthanum Niruthanum Enna
+
+Black And White Kannu
+Unna Paatha Colour Ah Maaruthe
+Thuru Pudicha Kaadhal Narambellam
+Suru Surupaaga Seeruthe
+Ava Face’u Adadadadada
+Ava Shape’u Apapapapapa
+Mothathula Aiyayoyoyoyo
+Izhukuthu Izhukuthu Izhukuthu Enna
+
+Thangame Onnathaan Thedi Vandhen Naane!
+Vairame Orunaal Onna Thookuvene!
+
+Hey Nee Enna Paakura Maari
+Naan Unna Paakalaye
+Naan Pesum Kaadhal Vasanam
+Unaku Thaan Kekalaye
+Adiye En Kanavula Senju Vacha Selaiye
+Kodiye En Kannukulla Pothivaipen Unaye
+Oru Billa Pola Naanum Aanalum
+Unna Nalla Paathupene Ennalum
+Adi Ezhezhu Jenmam Aanalum
+Nee Illama Naa Illadi..
+
+Thangamey Onnathaan Thedi Vandhen Naane!
+Vairame Orunaal Onna Thookuvene!` },
+  
+  { id: 3, title: "O Sakkanoda", artist: "Dhee", lyrics: `O Sakkanoda
+Pattu pidikilai
+Dhaadi chesinaava dhada dhada
+Kassu bussu kayyalu
+Inkentha kaalam
+Theepi muddhu
+Yuddhalu veyyali thaalam
+Vidigaa naligaa ontari nenu
+Neelo konchem naaku chotivvu
+
+Ninnu pattesukunta
+Janta kattesukunta
+Nuvvu naa sonthamanta baaboo…
+Nannu icchesukunta
+Ninnu thecchesukunta
+Thaali kattinchukunta baaboo..
+
+Chiru burruga
+chicchu buddilaa
+Nuvvante yedamukhamai
+Thirigaa nenu
+
+Yepudoo ala
+thelavaaragaa
+Nanu nenu nee kalalo
+Kanugonnanu
+
+Nacchavu andhagaada
+Thecchavu naalo theda
+Nuvvaade aata laage
+Preminchu kaastha nannu kooda
+
+Ninnu pattesukunta
+Janta kattesukunta
+Nuvvu naa sonthamanta baaboo…
+
+Nannu icchesukunta
+Ninnu thecchesukunta
+Thaali kattinchukunta baaboo..` },
+  
+  { id: 4, title: "Chinni Chinni aasa", artist: "Chitra", lyrics: `Dil hai chhota sa, chhoti si asha
+Masti bhare mann ki bholi si asha
+Chand taron ko chhoone ki asha
+Aasmanon mein udne ki asha
+
+Chinna Chinna Aasai Siragadikum Aasai 
+Muthu Muthu Aasai Mudinthuvaitha Aasai 
+Vennilavu Thottu Muthamida Aasai 
+Ennai Intha Bhoomi Sutrivara Aasai 
+
+Chinni chinni aasa chinnadaani aasa 
+Muddu muddu aasa mutyamanta aasa 
+Poovulaa nene navvukovaali
+Gaaline nenai saagipovali 
+Chintale leka chindulEyaali 
+Vedukalalonaa thelipovali 
+Toorupu rekha velugukaavaali 
+
+Chinni chinni aasa chinnadaani aasa 
+Muddu muddu aasa mutyamanta aasa 
+Jaabilini taaki muddulida aasa 
+Vennalaku todai aaDukOnu aasa 
+Chinni chinni aasa chinnadaani aasa 
+Muddu muddu aasa mutyamanta aasa ` },
+  
+  { id: 5, title: "Dilse re", artist: "Ar rehman", lyrics: "" },
+  
+  { id: 6, title: "Jallantha kavintha", artist: "Chitra", lyrics: `Jallantha kavvintha  
+Jallanta kavvinta kaavaalile ollanta tullinta raavaalile 
+Jallanta kavvinta kaavaalile ollanta tullinta raavaalile 
+Urukulu parugulu 
+Uduku vayasu dudukutanam niluvadu 
+Tolakari merupulaa 
+Ulikipadina kaliki sogasu 
+Kondamma konamma mecchindile endallo vennellu tecchindile 
+Kondamma konamma mecchindile endallo vennellu tecchindile 
+
+Vaagulu vankulu jalajalaa chilipigaa pilichinaa 
+Gaalulu vaanalu chitapataa chinukule chilikinaa 
+Manasu aagadu idemi allaro 
+Tanuvu daagadu ademi taakido 
+Konachaatu kondamalle lenivanka muddulaadi 
+Velladaaye kallu leni devudenduko mari 
+
+Jallanta kavvinta kaavaalile ollanta tullinta raavaalile 
+Jallanta kavvinta kaavaalile ollanta tullinta raavaalile 
+Kondamma konamma mecchindile endallo vennellu tecchindile 
+Kondamma konamma mecchindile endallo vennellu tecchindile` },
+  
+  { id: 7, title: "Kalyana Vayasu", artist: "Abhay Jodhpur", lyrics: `Ava Munnala Nikiran
+Ava Kannala Sokkuran
+Naan Thannala Sikkuren
+Pinnala Suthuren
+Unnala Savuren
+
+Ava Munnala Nikiran
+Andha Kannala Sokkuran
+Naan Thannala Sikkuren
+Pinnala Suthuren
+Unnala Savuren
+
+[Verse 1]
+
+Oorula Avalo Ponnuga Iruthum
+Luck Thaan Unnaku Adichurukku
+
+Ada Unnala Sikkuren
+Unnala Thikkuren
+Unnala Vikkuren
+
+Anushka Sharma'Ku Kohli Pol
+Unnaku Thaan Naanum Sevichurukuren
+
+Ada Unna Naan Dawren
+Unnala Savuren
+
+[Chorus]
+
+Ennaku Ippo Kalyana Vayasuthaan Vandhuduchu Di
+Date Pannavaa
+Illa Chat Pannavaa
+
+Unkooda Serndhu Vazha Aasa Thaan Vandhuduchu Di
+Meet Pannavaa
+Illa Wait Pannavaa` },
+  
+  { id: 8, title: "Malare", artist: "Vijay Yesudas", lyrics: `Thelimaanam mazhavillin niramaniyum neram
+Niramarnnoru kanavennil theliyunna pole
+Puzhayoram thazhukunnee thanuveeran kaattum
+Pulakangal izhaneythoru kuzhaloothiya pole
+Kulirekum kanavennil kathiradiya kaalam
+Manathaaril madhumaasam thaliraadiya neram
+Akamaruvum mayilinakal thuyilunarum kaalam
+En akathaaril anuraagam pakarunna yaamam
+hook
+Azhake
+Azhakil theerthoru shilayazhake
+Malare
+Ennuyiril vidarum panimalare
+verse
+Malare ninne kaanathirunnal
+Mizhivekiya niramellam maayunna pole
+Alivodennarikathinnanayathirunnal
+Azhakekiya kanavellam akalunna pole
+Njanente aathmavin aazhathinullil
+Athilolam arorumariyaathe sookshicha
+Thaalangal, raagangal, eenangalaai
+Oro oro varnangalai
+Idarunnorente idanenjinullil
+Pranayathin mazhayayi nee pozhiyunnee naalil
+Thalarunnorente thanuthorum ninte
+Alathallum pranayathalunarum Malare
+Azhake` },
+  
+  { id: 9, title: "Oka Maaru", artist: "Karthik", lyrics: `O"Paatha padhanisa dhenikadhi nasa
+Nadukalu brathukuna marchinadhe
+Saayamkala vela dhoruku chiru thindi
+Vaasanalu vaaduka chesindhe
+Guchi koona challagaa neesa
+Nanu thake konda mallikaa neesa
+Sari jodu nenega anumaanam inkela
+
+
+Avoka maaru kalisina andam
+Ha ala laaga yegisina kaalam
+Kantikedhuruga kanabadagaane
+Anthey thadabadinaane
+Kantikedhuruga kanabadagaane
+Anthey thadabadinaane   Thana alley kadhale podupu
+Vedha jalle kalale merupu
+Yedalone thana peru kottukundhi ninne
+Adhi nannu pilichinadhi tharunam
+Nuli vechhaga thaakina kiranam
+
+Kannu therichina kaluvanu choosaane"` },
+  
+  { id: 10, title: "Chaaru seela", artist: "Yazin Nazir", lyrics: `Mercury malapuni poolatho chekkithe
+Shilpamai marina sundari
+Kamudu rasina glamouru dictionary
+Ni nadum ompuna scenery
+Oh charuseela swapna bala
+Yevvanela prema pataashala
+Male poola mafiaala
+Repi nave gundelonna gola
+
+Yee hot hot hot mexican tequila
+Chikinave chinanati fantasy la
+O parto parto picha cute indian masala
+Ni smile e love symbol eh
+
+O charuseela swapna bala
+Yevvanela prema pataashala
+Male poola mafiaala
+Repi nave gundelonna gola
+
+Yee coniala kothagundi kick
+Chethikandane soku blank checku
+
+Na muni vellaki kannulu molichene
+Ni siri sogasunu thakithe
+Na kanu reppalu kathulu dusene
+Nuvvela jinka la dorikithe` },
+  
+  { id: 11, title: "Cheppave Chirugaali", artist: "Udit Narayan", lyrics: "" },
+  { id: 12, title: "Unnakul Naane", artist: "Bombay Jayashri", lyrics: "" },
+  { id: 13, title: "Madhura Meenakshi", artist: "Unnikrishnan, Harini", lyrics: "" },
+  { id: 14, title: "Konte chooputho", artist: "Belly Raj, Deepa Mariam", lyrics: `Konte chooputho
+Konta sepu navvuthu
+Nuvvu naatho aaduthu
+Unte baagundhe
+Naa tholi
+Prayaana leelalo
+Nuvvu naa thodu
+Ayithe baagundhe` },
+  { id: 15, title: "Nalla Nallani kalla", artist: "M.M.Keeravani,Chitra", lyrics: "" },
+  { id: 16, title: "Who's the hero", artist: "Andrea Jeremiah", lyrics: "" },
+  { id: 17, title: "My Heart is beating", artist: "K.K", lyrics: `My heart is beating
+Adhi ninnu choodaga
+My heart is beating
+Adhi ninnu choodaga
+
+Naa manase
+Ninnu koraga` },
+  { id: 18, title: "Oorum Blood Unplugged", artist: "Sai Abhyankkar", lyrics: "" },
+  { id: 19, title: "Hello Rammante", artist: "Vijay Prakash", lyrics: `Hello rammante
+Vachesindhi
+Hello rammante
+Vachesindhi` },
+  { id: 20, title: "Masakalli", artist: "Mohit Chauhan", lyrics: "" },
+  { id: 21, title: "Na cheli Rojave", artist: "S. P. Balasubrahmanyam", lyrics: `Na cheli rojave
+Nalo o segave
+Aase aaroju naake thodave
+Na cheli rojave
+Nalo o segave
+Aase aaroju naake thodave` },
+  { id: 22, title: "Jamu Rathri", artist: "S. P. Balasubrahmanyam &  Chithra", lyrics: `Jaamu raathiri
+Jaabilamma
+Jola paadana ila` },
+  { id: 23, title: "Oh Cheliya", artist: "Unnikrishnan, Harini", lyrics: "" },
+  { id: 24, title: "Nilluvadhamu", artist: "Karthik, Sumangali", lyrics: "" },
+  { id: 25, title: "Nanne Nanne Chusthu", artist: "Tippu,Shalini Singh", lyrics: `Nanne nanne chusthu
+Nuvvaagipoyaane
+Gaalinai kanulalo
+Nannodili poyaane
+Kadhileti vennela
+Kadhileti vennela
+Nannu nadipinche
+Adigo poyindhe
+
+Nanne nanne chusthu
+Nuvvaagipoyaane
+Gaalinai kanulalo
+Nannodili poyaane
+
+Yematho yedhalonchi
+Yendhuko poyindho
+Yematho yedhalonchi
+Yendhuko poyindho
+Kadhileti vennela
+Kadhileti vennela
+Nannu nadipinche
+Adigo poyindhe` },
+  { id: 26, title: "Pehla Nasha", artist: "Udit Narayan", lyrics: `Pehla nasha
+Pehla khumaar
+Naya pyaar hai
+Naya intezaar
+
+Karloo main kya apna haal
+Ae dil-e-bekaraar
+Mere dil-e-bekaraar
+Tu hi bata` },
+  { id: 27, title: "Senjithale", artist: "Anirudh Ravichander", lyrics: "" },
+  { id: 28, title: "Kadallale", artist: "Sid Sriram", lyrics: `Kadallale veche kanule
+Kadhilenu gaana
+Kadhilenu gaana` },
+  { id: 29, title: "Suthi Suthi", artist: "", lyrics: `Suthi suthi navvuthunte
+Soku sokuga` },
+  { id: 30, title: "Pottala Muttai", artist: "", lyrics: `Pottala muttaye
+Pottala muttaye` },
+  { id: 31, title: "Mundhinam", artist: "", lyrics: "" },
+  { id: 32, title: "Kya Mujhe Pyar hei", artist: "K.K", lyrics: `Kya Mujhe Pyaar Hai
+Yaara
+Kya Mujhe Pyaar Hai
+
+Kaisi hai yeh uljhan
+Kaise yeh paheli
+Kyun hai yeh betabi
+Kyun hai yeh tanhayi
+
+Kya Mujhe Pyaar Hai
+Yaara
+Kya Mujhe Pyaar Hai` },
+  { id: 33, title: "Baby he Loves you", artist: "Devisri Prasad", lyrics: "" },
+  { id: 34, title: "Raakasi Raakasi", artist: "Jr NTR", lyrics: "" },
+  { id: 35, title: "Telusuna Telusuna", artist: "Chitra", lyrics: "" },
+  { id: 36, title: "Jabillli Kosam", artist: "S.Janaki", lyrics: `Jabillli kosam
+Aakashamalle vechanu nee raakakai
+Jabillli kosam
+Aakashamalle vechanu nee raakakai` },
+  { id: 37, title: "Oh sita", artist: "Ramya Behara, and S. P. Charan", lyrics: "" },
+  { id: 38, title: "Aaj ki Raat", artist: "Madhubanti Bagchi, Divya Kumar", lyrics: "" },
+  { id: 39, title: "Mein Agar kahoon", artist: "Sonu Nigam", lyrics: "" },
+  { id: 40, title: "Tum hi Ho x Sayyara x BArbaad", artist: "", lyrics: "" },
+  { id: 41, title: "Chilipiga X Neetri mullai x Nammaka Tappani", artist: "", lyrics: "" },
+  { id: 42, title: "Sach Kehra hei deewana", artist: "K.K", lyrics: "" },
+  { id: 43, title: "Singles Anthem", artist: "Anurag Kulakarni", lyrics: "" },
+  { id: 44, title: "Rangamma Mangamma", artist: "MM Manasi", lyrics: `Rangamma Mangamma
+Rangamma Mangamma
+
+Yendaro Mahanubhavulu
+Andariki Vandhanamulu
+Andariki Vandhanamulu
+
+Rangamma Mangamma
+Rangamma Mangamma
+
+Ooruko Pilla
+Nannu Odili Nuvvu Poyela
+Poyi Poyi Nuvvu
+Chesinaavule Marra
+
+Rangamma Mangamma
+Rangamma Mangamma
+
+Nannu Mingi Minginaavuga
+Nuvvu Thella Thella Thella
+Thella Thella Thella Thella Thella
+Nuvvu Thella Thella Thella
+Thella Thella Thella Thella Thella` },
+  { id: 45, title: "Daddy Mommy", artist: "Mamatha Mohandas", lyrics: "" },
+  { id: 46, title: "Mayya Mayya", artist: "Chinmayi", lyrics: "" },
+  { id: 47, title: "Ram Chahe Leela", artist: "", lyrics: "" },
+  { id: 48, title: "Why this Kolevari", artist: "Dhanush", lyrics: "" },
+];
     const el = (id) => document.getElementById(id);
 
     const searchInput = el("searchInput");
