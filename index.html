@@ -26,7 +26,14 @@
     }
 
     *{ box-sizing:border-box; }
-    html, body { margin:0; padding:0; }
+    
+    html, body{
+      margin:0;
+      padding:0;
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+    }
 
     html{
       height:100%;
@@ -71,12 +78,13 @@
     }
 
     .wrap{
+      width:100%;
       max-width: 980px;
       margin: 0 auto;
-
+    
       padding-left: 14px;
       padding-right: 14px;
-
+    
       padding-top: calc(14px + env(safe-area-inset-top));
       padding-bottom: calc(26px + env(safe-area-inset-bottom));
     }
@@ -94,7 +102,7 @@
     .topLogo{
       height: 120px;
       width: auto;
-      max-width: min(90vw, 480px);
+      max-width: min(84vw, 480px);
       object-fit: contain;
       display:block;
       filter: drop-shadow(0 14px 30px rgba(0,0,0,.60));
@@ -114,12 +122,14 @@
     }
 
     .card{
+      width:100%;
+      max-width:100%;
       background: var(--card);
       border: 1px solid var(--stroke);
       border-radius: 18px;
       box-shadow: var(--shadow);
       overflow:hidden;
-
+    
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
@@ -142,10 +152,12 @@
       display:flex;
       gap:10px;
       align-items:center;
+      min-width:0;
     }
 
     #searchInput{
-      flex:1;
+      flex:1 1 auto;
+      min-width:0;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.24);
       color: var(--text);
@@ -182,6 +194,7 @@
       justify-content:space-between;
       gap:10px;
       padding: 10px 14px 12px;
+      min-width:0;
     }
     .muted{ color: var(--muted); }
 
@@ -203,6 +216,7 @@
       margin: 0 14px 10px;
       border: 1px dashed rgba(255,255,255,.18);
       border-radius: 16px;
+      min-width:0;
     }
     .hidden{ display:none; }
 
@@ -219,6 +233,8 @@
       align-items:center;
       justify-content:space-between;
       gap: 12px;
+      width:100%;
+      min-width:0;
       padding: 12px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.10);
@@ -234,7 +250,13 @@
     }
     .songItem:active{ transform: translateY(0px) scale(.995); }
 
-    .songLeft{ display:flex; gap:12px; align-items:center; min-width:0; }
+    .songLeft{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+      flex:1 1 auto;
+    }
     .songNum{
       width: 34px; height: 34px;
       border-radius: 12px;
@@ -245,7 +267,10 @@
       font-size: 12px;
       flex: 0 0 auto;
     }
-    .songText{ min-width:0; }
+    .songText{
+      min-width:0;
+      flex:1 1 auto;
+    }
     .songTitle{
       font-weight: 900;
       font-size: 15px;
@@ -257,7 +282,12 @@
       color: var(--muted);
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
-    .chev{ color: rgba(255,255,255,.55); font-size: 22px; line-height: 1; }
+    .chev{
+      color: rgba(255,255,255,.55);
+      font-size: 22px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
 
     mark{
       background: rgba(255,60,60,.18);
@@ -380,6 +410,59 @@
       font-size: 12px;
       color: var(--muted);
     }
+
+    @media (max-width: 480px){
+  .wrap{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .searchArea,
+  .metaRow,
+  .detailTop,
+  .detailHeader{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .songList{
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  .songItem{
+    gap:10px;
+    padding:12px 10px;
+  }
+
+  .songLeft{
+    gap:10px;
+  }
+
+  .songNum{
+    width:32px;
+    height:32px;
+    font-size:11px;
+  }
+
+  .songTitle{
+    font-size:14px;
+  }
+
+  .songArtist{
+    font-size:11px;
+  }
+
+  .pill{
+    font-size:11px;
+    padding:6px 9px;
+  }
+
+  .btn{
+    padding:10px 11px;
+    font-size:12px;
+  }
+}
 
     @media (min-width: 720px){
       .wrap{
