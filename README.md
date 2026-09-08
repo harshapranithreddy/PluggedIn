@@ -7,7 +7,7 @@ and sing along. It is one HTML file: no framework, no backend, no build step.
 Open it on a phone and it behaves like a small app.
 
 > I built this in my own time for a live jamming session we ran earlier this year
-> under XTSY. We coordinated with the band who were performing, got their setlist
+> under XTSY Productions. We coordinated with the band who were performing, got their setlist
 > for the night, and I turned it into a web page the audience could reach through
 > a single QR code at the venue. Scan it, and the whole setlist is in your hand,
 > so you can follow along and sing with the band instead of guessing the words.
